@@ -4,14 +4,7 @@ set -euo pipefail
 
 # Check if gnome-extensions-cli is installed
 if ! command -v gnome-extensions-cli >/dev/null 2>&1; then
-  echo "gnome-extensions-cli not found. Installing via brew + pip3..."
-
-  # Ensure pipx is available
-  if ! command -v pipx >/dev/null 2>&1; then
-    echo "pip3 not found. Installing pip3 via Homebrew..."
-    brew install pip3
-    pip3 ensurepath
-  fi
+  echo "gnome-extensions-cli not found. Installing via pip3..."
 
   # Install gnome-extensions-cli via pipx
   pip3 install gnome-extensions-cli
