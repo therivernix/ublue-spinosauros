@@ -30,6 +30,10 @@ rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 
+# Install Extensions
+gnome-extensions install --force /etc/customscripts/tailscale-gnome-qstailscale-qs.github.io.v14.shell-extension.zip
+gnome-extensions install --force /etc/customscripts/clipboard-indicatortudmotu.com.v71.shell-extension.zip
+
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
