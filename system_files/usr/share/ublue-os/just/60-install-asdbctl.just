@@ -4,5 +4,9 @@ install-asdbctl:
     cd /tmp/asdbctl/
     cargo install --path .
     
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+    
+    rm -rf /tmp/asdbctl/
+    
     sudo udevadm control --reload-rules
     sudo udevadm trigger
