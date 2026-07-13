@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Path to framework_tool
-FRAMEWORK_TOOL="/home/linuxbrew/.linuxbrew/bin/framework_tool"
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -18,7 +15,7 @@ echo "----------------------------------------"
 # Always show thermal status at start
 echo -e "${CYAN}🌡️ Current Thermal Status (startup)${NC}"
 echo "----------------------------------------"
-sudo "$FRAMEWORK_TOOL" --thermal
+sudo -E env "PATH=$PATH" framework_tool --thermal
 echo ""
 
 mode=""
@@ -36,38 +33,38 @@ select option in \
     case "$REPLY" in
         1)
             mode="Fan 30%"
-            sudo "$FRAMEWORK_TOOL" --fansetduty 30
+            sudo -E env "PATH=$PATH" framework_tool --fansetduty 30
             echo -e "${GREEN}✔ Set fan duty to 30%${NC}"
             break
             ;;
         2)
             mode="Fan 40%"
-            sudo "$FRAMEWORK_TOOL" --fansetduty 40
+            sudo -E env "PATH=$PATH" framework_tool --fansetduty 40
             echo -e "${GREEN}✔ Set fan duty to 40%${NC}"
             break
             ;;
         3)
             mode="Fan 50%"
-            sudo "$FRAMEWORK_TOOL" --fansetduty 50
+            sudo -E env "PATH=$PATH" framework_tool --fansetduty 50
             echo -e "${GREEN}✔ Set fan duty to 50%${NC}"
             break
             ;;
         4)
             mode="Fan 100%"
-            sudo "$FRAMEWORK_TOOL" --fansetduty 100
+            sudo -E env "PATH=$PATH" framework_tool --fansetduty 100
             echo -e "${GREEN}✔ Set fan duty to 100%${NC}"
             break
             ;;
         5)
             mode="Auto Fan Control"
-            sudo "$FRAMEWORK_TOOL" --autofanctrl
+            sudo -E env "PATH=$PATH" framework_tool --autofanctrl
             echo -e "${GREEN}✔ Enabled automatic fan control${NC}"
             break
             ;;
         6)
             mode="Thermal Status"
             echo -e "${CYAN}🌡️ Current Thermal Status:${NC}"
-            sudo "$FRAMEWORK_TOOL" --thermal
+            sudo -E env "PATH=$PATH" framework_tool --thermal
             ;;
         *)
             echo -e "${RED}❌ Invalid choice, try again.${NC}"
@@ -80,7 +77,7 @@ if [[ "$mode" != "Thermal Status" ]]; then
     echo ""
     echo -e "${CYAN}🌡️ Thermal Status (after changes)${NC}"
     echo "----------------------------------------"
-    sudo "$FRAMEWORK_TOOL" --thermal
+    sudo -E env "PATH=$PATH" framework_tool --thermal
 fi
 
 echo ""
