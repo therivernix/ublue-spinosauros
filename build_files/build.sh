@@ -31,18 +31,6 @@ rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 
-# adding studio display support with asdbctl
-
-cargo build \
-    --release \
-    --locked \
-    --manifest-path /usr/share/ublue-os-spinosauros/asdbctl/Cargo.toml
-
-install -Dm755 \
-    /ctx/system_files/usr/share/ublue-os-spinosauros/asdbctl/target/release/asdbctl \
-    /usr/local/bin/asdbctl
-
-
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
