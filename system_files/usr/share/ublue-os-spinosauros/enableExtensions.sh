@@ -13,7 +13,6 @@ extensions=(
   "hide-minimized@danigm.net"
   "hotedge@jonathan.jdoda.ca"
   "just-perfection-desktop@just-perfection"
-  "light-style@gnome-shell-extensions.gcampax.github.com"
   "nightthemeswitcher@romainvigier.fr"
   "quick-settings-audio-panel@rayzeq.github.io"
   "restartto@tiagoporsch.github.io"
