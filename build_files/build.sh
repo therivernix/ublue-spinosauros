@@ -36,7 +36,7 @@ rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 cargo build \
     --release \
     --locked \
-    --manifest-path /ctx/system_files/usr/share/ublue-os-spinosauros/asdbctl/Cargo.toml
+    --manifest-path /usr/share/ublue-os-spinosauros/asdbctl/Cargo.toml
 
 install -Dm755 \
     /ctx/system_files/usr/share/ublue-os-spinosauros/asdbctl/target/release/asdbctl \
