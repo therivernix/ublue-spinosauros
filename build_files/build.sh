@@ -31,6 +31,9 @@ rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 
+# enable systemd service
+systemctl --global enable spinosauros-first-login.service
+
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
