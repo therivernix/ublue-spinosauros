@@ -1,9 +1,0 @@
-[Unit]
-Description=Spinosauros first login setup
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/bin/first-login.sh
-
-[Install]
-WantedBy=default.target
