@@ -3,7 +3,7 @@ always-show-log-out=true
 enabled-extensions=['AlphabeticalAppGrid@stuarthayhurst','appindicatorsupport@rgcjonas.gmail.com','blur-my-shell@aunetx','custom-command-list@storageb.github.com','dash-to-dock@micxgx.gmail.com','hotedge@jonathan.jdoda.ca','hide-minimized@danigm.net','just-perfection-desktop@just-perfection','light-style@gnome-shell-extensions.gcampax.github.com','nightthemeswitcher@romainvigier.fr','quick-settings-audio-panel@rayzeq.github.io','smile-extension@mijorus.it','tiling-assistant@leleat-on-github','bazaar-integration@kolunmi.github.io','gradia-integration@alexandervanhee.github.io','caffeine@patapon.info']
 
 [org/gnome/mutter]
-dynamic-workspaces=true
+dynamic-workspaces=false
 
 [org/gnome/desktop/wm/preferences]
 num-workspaces=4
