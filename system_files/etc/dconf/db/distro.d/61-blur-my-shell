@@ -1,19 +1,19 @@
-[/]
+[org/gnome/shell/extensions/blur-my-shell/]
 rounded-blur-found=false
 settings-version=2
 
-[appfolder]
+[org/gnome/shell/extensions/blur-my-shell/appfolder]
 brightness=0.59999999999999998
 sigma=30
 
-[applications]
+[org/gnome/shell/extensions/blur-my-shell/applications]
 blur=false
 pipeline='pipeline_default'
 
-[coverflow-alt-tab]
+[org/gnome/shell/extensions/blur-my-shell/coverflow-alt-tab]
 pipeline='pipeline_default'
 
-[dash-to-dock]
+[org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
 blur=false
 brightness=0.59999999999999998
 override-background=true
@@ -22,19 +22,19 @@ sigma=30
 static-blur=true
 style-dash-to-dock=0
 
-[dash-to-panel]
+[org/gnome/shell/extensions/blur-my-shell/dash-to-panel]
 blur-original-panel=true
 
-[hidetopbar]
+[org/gnome/shell/extensions/blur-my-shell/hidetopbar]
 compatibility=false
 
-[lockscreen]
+[org/gnome/shell/extensions/blur-my-shell/lockscreen]
 pipeline='pipeline_default'
 
-[overview]
+[org/gnome/shell/extensions/blur-my-shell/overview]
 pipeline='pipeline_default'
 
-[panel]
+[org/gnome/shell/extensions/blur-my-shell/panel]
 blur=true
 brightness=0.59999999999999998
 corner-radius=0
@@ -45,9 +45,9 @@ sigma=30
 static-blur=false
 style-panel=0
 
-[screenshot]
+[org/gnome/shell/extensions/blur-my-shell/screenshot]
 pipeline='pipeline_default'
 
-[window-list]
+[org/gnome/shell/extensions/blur-my-shell/window-list]
 brightness=0.59999999999999998
 sigma=30
