@@ -1,9 +1,0 @@
-[Unit]
-Description=Configure GNOME Extensions
-
-[Service]
-Type=oneshot
-ExecStart=/etc/ublue-os-spinosauros/configureExtensions.sh
-
-[Install]
-WantedBy=default.target

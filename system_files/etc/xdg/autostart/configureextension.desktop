@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Configure Extensions
-Exec=/etc/ublue-os-spinosauros/configureExtensions.sh
+Exec=/usr/share/ublue-os-spinosauros/configureExtensions.sh
 OnlyShowIn=GNOME;
 NoDisplay=true
 X-GNOME-Autostart-enabled=true
