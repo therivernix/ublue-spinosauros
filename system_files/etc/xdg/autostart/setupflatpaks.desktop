@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Configure Extensions
+Exec=/usr/share/ublue-os-spinosauros/setupflatpaks.sh
+OnlyShowIn=GNOME;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
