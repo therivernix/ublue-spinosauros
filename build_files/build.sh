@@ -32,8 +32,7 @@ rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 
 # build custom schemas
-glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
-
+#glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
 
 #### Example for enabling a System Unit File
 

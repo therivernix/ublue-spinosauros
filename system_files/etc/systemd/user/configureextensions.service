@@ -1,0 +1,10 @@
+[Unit]
+Description=ConfigureExtensions
+After=network.target
+
+[Service]
+ExecStart=/usr/share/ublue-os-spinosauros/configureExtensions.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
