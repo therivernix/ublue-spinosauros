@@ -3,7 +3,7 @@ Description=ConfigureExtensions
 After=network.target
 
 [Service]
-ExecStart=/usr/share/ublue-os-spinosauros/configureExtensions.sh
+ExecStart=/etc/ublue-os-spinosauros/configureExtensions.sh
 Restart=always
 
 [Install]
