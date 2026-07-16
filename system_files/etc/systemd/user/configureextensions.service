@@ -1,10 +1,9 @@
 [Unit]
-Description=ConfigureExtensions
-After=network.target
+Description=Configure GNOME Extensions
 
 [Service]
+Type=oneshot
 ExecStart=/etc/ublue-os-spinosauros/configureExtensions.sh
-Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
