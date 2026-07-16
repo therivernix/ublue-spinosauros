@@ -1,0 +1,13 @@
+[Unit]
+Description=Run once
+After=local-fs.target
+After=network.target
+#After=XXX
+
+[Service]
+ExecStart=/usr/share/ublue-os-spinosauros/configureExtensions.sh
+RemainAfterExit=true
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
