@@ -37,3 +37,5 @@ rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
+
+systemctl --user enable configureextensions.service
