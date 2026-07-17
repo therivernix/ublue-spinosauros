@@ -14,7 +14,7 @@ cp -avf "/ctx/system_files"/. /
 
 
 # this installs a package from fedora repos
-dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config
+dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config steam
 
 # Use a COPR Example:
 #
