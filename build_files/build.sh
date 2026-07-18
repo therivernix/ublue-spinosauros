@@ -30,6 +30,7 @@ rm -rf /usr/share/gnome-shell/extensions/launch-new-instance@gnome-shell-extensi
 rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
+rm -rf /usr/share/gnome-shell/extensions/restartto@tiagoporsch.github.io
 
 # build custom schemas
 #glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
