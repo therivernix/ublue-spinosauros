@@ -15,7 +15,6 @@ extensions=(
   "just-perfection-desktop@just-perfection"
   "nightthemeswitcher@romainvigier.fr"
   "quick-settings-audio-panel@rayzeq.github.io"
-  "restartto@tiagoporsch.github.io"
   "smile-extension@mijorus.it"
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "tiling-assistant@leleat-on-github"

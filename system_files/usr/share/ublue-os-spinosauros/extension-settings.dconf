@@ -309,9 +309,6 @@ remove-output-volume-slider=false
 version=2
 widgets-order=['profile-switcher', 'mpris-controllers', 'output-volume-slider', 'perdevice-volume-sliders', 'input-volume-slider', 'balance-slider', 'applications-volume-sliders']
 
-[restartto]
-blacklist=['Fedora', 'EFI USB Device', 'EFI Network', 'EFI DVD/CDROM']
-
 [search-light]
 animation-speed=100.0
 background-color=(0.0, 0.0, 0.0, 0.80000000000000004)
