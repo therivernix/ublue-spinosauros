@@ -21,6 +21,7 @@ install-flatpaks:
         com.yubico.yubioath \
         org.gnome.World.PikaBackup \
         ca.desrt.dconf-editor \
+        com.obsproject.Studio \
         page.codeberg.libre_menu_editor.LibreMenuEditor
 
 update-flatpaks:
