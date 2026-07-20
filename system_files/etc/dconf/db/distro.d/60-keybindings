@@ -38,3 +38,8 @@ switch-to-workspace-right=['<Control><Super>Right']
 switch-to-workspace-last=['<Control>0']
 
 toggle-fullscreen=['<Super>f']
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom7]
+binding='<Super>Return'
+command='/usr/bin/ptyxis --new-window'
+name='Ptyxis'
