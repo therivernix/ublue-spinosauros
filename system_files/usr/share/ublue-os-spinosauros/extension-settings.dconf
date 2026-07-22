@@ -66,6 +66,7 @@ style-dash-to-dock=0
 pipeline='pipeline_default'
 
 [blur-my-shell/overview]
+blur=true
 pipeline='pipeline_default'
 
 [blur-my-shell/panel]
@@ -76,6 +77,10 @@ force-light-text=true
 pipeline='pipeline_default'
 sigma=30
 static-blur=false
+
+[blur-my-shell/popup]
+blur=false
+pipeline='pipeline_default_rounded'
 
 [blur-my-shell/screenshot]
 pipeline='pipeline_default'
@@ -97,7 +102,7 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1784042715
+next-history-clear=1784834577
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
@@ -235,7 +240,7 @@ custom-background-color=true
 custom-theme-shrink=false
 customize-alphas=false
 dash-max-icon-size=40
-dock-fixed=true
+dock-fixed=false
 dock-position='BOTTOM'
 extend-height=false
 height-fraction=0.90000000000000002
@@ -246,7 +251,7 @@ intellihide=true
 intellihide-mode='FOCUS_APPLICATION_WINDOWS'
 max-alpha=0.80000000000000004
 preferred-monitor=-2
-preferred-monitor-by-connector='Virtual-1'
+preferred-monitor-by-connector='eDP-1'
 pressure-threshold=50.0
 running-indicator-style='DOT'
 shortcut=['<Super>r']
