@@ -233,6 +233,7 @@ togglestate2-setting=false
 always-center-icons=true
 apply-custom-theme=false
 autohide=true
+autohide-in-fullscreen=true
 background-color='rgb(0,0,0)'
 background-opacity=0.29999999999999999
 click-action='previews'
@@ -253,6 +254,7 @@ max-alpha=0.80000000000000004
 preferred-monitor=-2
 preferred-monitor-by-connector='eDP-1'
 pressure-threshold=50.0
+require-pressure-to-show=false
 running-indicator-style='DOT'
 shortcut=['<Super>r']
 shortcut-text='<Super>r'
@@ -271,7 +273,9 @@ window-maximized=false
 window-size=(640, 550)
 
 [hotedge]
+edge-size=uint32 100
 fallback-in-use=false
+pressure-threshold=uint32 200
 show-animation=false
 
 [just-perfection]
