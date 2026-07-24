@@ -4,6 +4,7 @@ enabled-extensions=['AlphabeticalAppGrid@stuarthayhurst','appindicatorsupport@rg
 
 [org/gnome/mutter]
 dynamic-workspaces=false
+edge-tiling=false
 
 [org/gnome/desktop/wm/preferences]
 num-workspaces=4
