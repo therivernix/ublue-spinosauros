@@ -17,8 +17,9 @@ extensions=(
   "quick-settings-audio-panel@rayzeq.github.io"
   "smile-extension@mijorus.it"
   "tailscale-gnome-qs@tailscale-qs.github.io"
-  "tiling-assistant@leleat-on-github"
   "Studi-Brightness-Control@matey-0"
+  "lightning-gnome-launcher@avimanyu"
+  "tilingshell@ferrarodomenico.com"
 )
 
 for ext in "${extensions[@]}"; do

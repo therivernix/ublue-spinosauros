@@ -28,5 +28,6 @@ gnome-extensions-cli install \
   quick-settings-audio-panel@rayzeq.github.io \
   smile-extension@mijorus.it \
   tailscale-gnome-qs@tailscale-qs.github.io \
-  tiling-assistant@leleat-on-github \
-  light-style@gnome-shell-extensions.gcampax.github.com
+  light-style@gnome-shell-extensions.gcampax.github.com \
+  tilingshell@ferrarodomenico.com \
+  lightning-gnome-launcher@avimanyu

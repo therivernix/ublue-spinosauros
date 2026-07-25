@@ -33,6 +33,8 @@ rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/restartto@tiagoporsch.github.io
 rm -rf /usr/share/gnome-shell/extensions/light-style@gnome-shell-extensions.gcampax.github.com
+rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
+
 #rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 
 # build custom schemas
