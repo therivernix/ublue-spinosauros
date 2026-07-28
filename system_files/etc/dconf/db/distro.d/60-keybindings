@@ -12,6 +12,10 @@ power-button-action='suspend'
 
 [org/gnome/desktop/wm/keybindings]
 close=['<Super>w']
+unmaximize=['<Super>Down']
+maximize=['<Super>Up']
+move-to-side-w=['<Super>Left']
+move-to-side-e=['<Super>Right']
 
 move-to-monitor-down=['<Super><Shift>Down']
 move-to-monitor-left=['<Super><Shift>Left']
