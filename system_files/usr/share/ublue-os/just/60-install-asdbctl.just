@@ -1,4 +1,4 @@
-install-asdbctl:
+spino-install-asdbctl:
     #!/usr/bin/env bash
     cp -r /usr/share/ublue-os-spinosauros/asdbctl/ /tmp/
     cd /tmp/asdbctl/

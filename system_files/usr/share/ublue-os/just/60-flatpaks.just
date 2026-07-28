@@ -1,4 +1,4 @@
-install-flatpaks:
+spino-install-flatpaks:
     flatpak install -y flathub org.gnome.Decibels \
         org.gnome.Snapshot \
         org.gnome.clocks \
@@ -24,10 +24,10 @@ install-flatpaks:
         com.obsproject.Studio \
         page.codeberg.libre_menu_editor.LibreMenuEditor
 
-update-flatpaks:
+spino-update-flatpaks:
     flatpak update -y
     
-remove-flatpaks:
+spino-remove-flatpaks:
     flatpak uninstall -y org.gnome.Calendar \
         org.gnome.Contacts \
         org.mozilla.firefox \
