@@ -100,7 +100,7 @@ sigma=30
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=2
+indicator-position-max=1
 user-enabled=false
 
 [clipboard-indicator]
@@ -111,7 +111,7 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1785360129
+next-history-clear=1785446529
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
@@ -120,7 +120,7 @@ toggle-menu=['<Super>v']
 [custom-command-list]
 command-order=[7, 6, 14, 2, 3, 4, 5, 15, 1, 8, 9, 11, 17, 10, 21, 22, 23, 12, 13, 16, 18, 19, 20, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 command1=('---', '', '', true)
-command10=('Gnome Extensions', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', true)
+command10=('Extension Manager', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', true)
 command11=('---', '', '', true)
 command12=('', '', '', true)
 command13=('---', '', '', true)
@@ -311,7 +311,7 @@ show-animation=false
 accent-color-icon=false
 activities-button=true
 animation=1
-dash-app-running=true
+dash-app-running=false
 events-button=false
 support-notifier-showed-version=36
 support-notifier-type=0

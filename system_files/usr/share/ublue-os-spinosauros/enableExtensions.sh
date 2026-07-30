@@ -3,7 +3,6 @@
 set -euo pipefail
 
 extensions=(
-  "AlphabeticalAppGrid@stuarthayhurst"
   "appindicatorsupport@rgcjonas.gmail.com"
   "blur-my-shell@aunetx"
   "caffeine@patapon.info"
@@ -19,7 +18,7 @@ extensions=(
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "Studi-Brightness-Control@matey-0"
   "lightning-gnome-launcher@avimanyu"
-  "tilingshell@ferrarodomenico.com"
+  "transparent-top-bar@ftpix.com"
 )
 
 for ext in "${extensions[@]}"; do
