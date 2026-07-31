@@ -19,7 +19,6 @@ flatpak install -y flathub org.gnome.Decibels \
         org.fedoraproject.MediaWriter \
         com.unicornsonlsd.finamp \
         it.mijorus.gearlever \
-        io.m51.Gelly \
         be.alexandervanhee.gradia \
         io.github.tobagin.keysmith \
         org.libreoffice.LibreOffice \

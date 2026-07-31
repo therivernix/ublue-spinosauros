@@ -36,7 +36,6 @@ rm -rf /usr/share/gnome-shell/extensions/restartto@tiagoporsch.github.io
 rm -rf /usr/share/gnome-shell/extensions/light-style@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
 rm -rf /usr/share/gnome-shell/extensions/tilingshell@ferrarodomenico.com
-rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 #rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 
