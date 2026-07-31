@@ -112,7 +112,7 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=2
+indicator-position-max=1
 user-enabled=false
 
 [clipboard-indicator]
@@ -259,7 +259,7 @@ apply-custom-theme=false
 autohide=true
 autohide-in-fullscreen=true
 background-color='rgb(17,17,17)'
-background-opacity=0.40000000000000002
+background-opacity=0.34999999999999998
 click-action='previews'
 custom-background-color=true
 custom-theme-shrink=false
