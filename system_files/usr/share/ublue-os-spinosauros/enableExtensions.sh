@@ -4,7 +4,6 @@ set -euo pipefail
 
 extensions=(
   "appindicatorsupport@rgcjonas.gmail.com"
-  "blur-my-shell@aunetx"
   "caffeine@patapon.info"
   "clipboard-indicator@tudmotu.com"
   "custom-command-list@storageb.github.com"
