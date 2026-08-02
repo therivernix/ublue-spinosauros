@@ -17,7 +17,6 @@ extensions=(
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "Studi-Brightness-Control@matey-0"
   "lightning-gnome-launcher@avimanyu"
-  "transparent-top-bar@ftpix.com"
   "dash-to-dock@micxgx.gmail.com"
 )
 
