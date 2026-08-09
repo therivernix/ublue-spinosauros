@@ -8,7 +8,7 @@ edge-tiling=true
 
 [org/gnome/desktop/wm/preferences]
 num-workspaces=4
-button-layout=':close'
+button-layout=':minimize,maximize,close'
 
 [org/gnome/desktop/interface]
 enable-hot-corners=false
