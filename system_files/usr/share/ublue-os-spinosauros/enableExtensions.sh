@@ -17,7 +17,6 @@ extensions=(
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "Studi-Brightness-Control@matey-0"
   "lightning-gnome-launcher@avimanyu"
-  "dash-to-dock@micxgx.gmail.com"
   "disable-workspace-switch-animation@osmancevik"
   "tiling-assistant@leleat-on-github"
 )

@@ -18,7 +18,6 @@ extensions=(
   "caffeine@patapon.info"
   "clipboard-indicator@tudmotu.com"
   "custom-command-list@storageb.github.com"
-  "dash-to-dock@micxgx.gmail.com"
   "hide-minimized@danigm.net"
   "hotedge@jonathan.jdoda.ca"
   "just-perfection-desktop@just-perfection"
@@ -28,7 +27,6 @@ extensions=(
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "Studi-Brightness-Control@matey-0"
   "lightning-gnome-launcher@avimanyu"
-  "dash-to-dock@micxgx.gmail.com"
   "disable-workspace-switch-animation@osmancevik"
   "tiling-assistant@leleat-on-github"
 )
