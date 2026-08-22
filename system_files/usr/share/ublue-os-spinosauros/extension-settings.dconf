@@ -100,7 +100,7 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=1
+indicator-position-max=2
 user-enabled=true
 
 [clipboard-indicator]
@@ -563,21 +563,21 @@ enable-snap-assist=true
 enable-snap-assistant-windows-suggestions=true
 enable-tiling-system-windows-suggestions=true
 enable-window-border=false
-focus-window-down=['<Alt>k']
+focus-window-down=['<Alt>j']
 focus-window-left=['<Alt>h']
 focus-window-next=['<Alt>n']
 focus-window-prev=['<Alt>p']
 focus-window-right=['<Alt>l']
-focus-window-up=['<Alt>j']
+focus-window-up=['<Alt>k']
 highlight-current-window=['<Alt><Super>m']
 inner-gaps=uint32 4
 last-version-name-installed='17.3'
 layouts-json='[{"id":"14465636","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.4999999999999993,"height":1,"groups":[1]}]},{"id":"23462020","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.5000000000000004,"height":0.5,"groups":[2,1]},{"x":0.5,"y":0.5,"width":0.5000000000000004,"height":0.5,"groups":[2,1]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]}]'
 move-window-center=['']
-move-window-down=['<Alt><Super>k']
+move-window-down=['<Alt><Super>j']
 move-window-left=['<Alt><Super>h']
 move-window-right=['<Alt><Super>l']
-move-window-up=['<Alt><Super>j']
+move-window-up=['<Alt><Super>k']
 outer-gaps=uint32 4
 overridden-settings="{\"org.gnome.mutter.keybindings\":{\"toggle-tiled-right\":\"['<Super>Right']\",\"toggle-tiled-left\":\"['<Super>Left']\"},\"org.gnome.desktop.wm.keybindings\":{\"maximize\":\"['<Super>Up']\",\"unmaximize\":\"['<Super>Down']\"},\"org.gnome.mutter\":{\"edge-tiling\":\"true\"}}"
 quarter-tiling-threshold=uint32 25
@@ -586,10 +586,10 @@ show-indicator=false
 snap-assist-sync-layout=true
 span-multiple-tiles-activation-key=['1']
 span-window-all-tiles=['<Control><Alt><Super>Return']
-span-window-down=['<Control><Alt><Super>k']
+span-window-down=['<Control><Alt><Super>j']
 span-window-left=['<Control><Alt><Super>h']
 span-window-right=['<Control><Alt><Super>l']
-span-window-up=['<Control><Alt><Super>j']
+span-window-up=['<Control><Alt><Super>k']
 tiling-system-activation-key=['1']
 tiling-system-deactivation-key=['0']
 top-edge-maximize=true
