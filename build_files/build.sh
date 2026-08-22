@@ -16,7 +16,7 @@ cp -avf "/ctx/system_files"/. /
 # this installs a package from fedora repos
 dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config steam
 dnf5 remove -y gnome-tweaks
-dnf5 install -y /usr/share/ublue-os-spinosauros/rpm/Psysonic-1.50.0-1.x86_64.rpm
+#dnf5 install -y /usr/share/ublue-os-spinosauros/rpm/Psysonic-1.50.0-1.x86_64.rpm
 
 # Use a COPR Example:
 #
