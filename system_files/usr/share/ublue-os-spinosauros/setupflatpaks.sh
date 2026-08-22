@@ -11,29 +11,73 @@ mkdir -p "$(dirname "$SENTINEL")"
 
 touch "$SENTINEL"
 
-flatpak install -y flathub org.gnome.Decibels \
-        org.gnome.Snapshot \
-        org.gnome.clocks \
+flatpak install -y flathub \
         app.drey.EarTag \
-        com.fastmail.Fastmail \
-        org.fedoraproject.MediaWriter \
-        com.unicornsonlsd.finamp \
-        it.mijorus.gearlever \
         be.alexandervanhee.gradia \
+        ca.desrt.dconf-editor \
+        cafe.avery.Delfin \
+        com.brave.Browser \
+        com.fastmail.Fastmail \
+        com.github.PintaProject.Pinta \
+        com.github.tchx84.Flatseal \
+        com.github.xournalpp.xournalpp \
+        com.mattjakeman.ExtensionManager \
+        com.obsproject.Studio \
+        com.ranfdev.DistroShelf \
+        com.somaxa8.earx \
+        com.synology.SynologyDrive \
+        com.vixalien.sticky \
+        com.vscodium.codium \
+        com.yubico.yubioath \
+        de.leopoldluley.Clapgrep \
+        de.swsnr.turnon \
+        fr.handbrake.ghb \
+        io.github.ans_ibrahim.Memento \
+        io.github.flattool.Ignition \
+        io.github.flattool.Warehouse \
+        io.github.kolunmi.Bazaar \
+        io.github.maniacx.BudsLink \
+        io.github.plrigaux.sysd-manager \
+        io.github.screwys.Rufin \
         io.github.tobagin.keysmith \
-        org.libreoffice.LibreOffice \
+        io.github.victoralvesf.aonsoku \
+        io.github.vikdevelop.SaveDesktop \
+        io.gitlab.adhami3310.Impression \
+        io.missioncenter.MissionCenter \
+        it.dottorblaster.cauldron \
+        it.mijorus.gearlever \
+        it.mijorus.smile \
         md.obsidian.Obsidian \
+        nl.andreasknoben.Laser \
+        org.fedoraproject.MediaWriter \
+        org.filezillaproject.Filezilla \
+        org.gaphor.Gaphor \
+        org.gnome.Calculator \
+        org.gnome.Decibels \
+        org.gnome.Epiphany \
+        org.gnome.FileRoller \
+        org.gnome.Firmware \
+        org.gnome.Logs \
+        org.gnome.Loupe \
+        org.gnome.NautilusPreviewer \
+        org.gnome.Papers \
+        org.gnome.PowerStats \
+        org.gnome.Showtime \
+        org.gnome.SimpleScan \
+        org.gnome.Snapshot \
+        org.gnome.SoundRecorder \
+        org.gnome.TextEditor \
+        org.gnome.World.PikaBackup \
+        org.gnome.baobab \
+        org.gnome.clocks \
+        org.kde.kdenlive \
+        org.keepassxc.KeePassXC \
+        org.libreoffice.LibreOffice \
         org.nickvision.tubeconverter \
         org.remmina.Remmina \
         org.signal.Signal \
-        com.synology.SynologyDrive \
-        de.swsnr.turnon \
-        org.gnome.Showtime \
-        com.yubico.yubioath \
-        org.gnome.World.PikaBackup \
-        ca.desrt.dconf-editor \
-        com.obsproject.Studio \
-        page.codeberg.libre_menu_editor.LibreMenuEditor
+        page.codeberg.libre_menu_editor.LibreMenuEditor \
+        page.tesk.Refine
         
 flatpak uninstall -y org.gnome.Calendar \
         org.gnome.Contacts \
