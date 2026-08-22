@@ -7,7 +7,6 @@ extensions=(
   "caffeine@patapon.info"
   "clipboard-indicator@tudmotu.com"
   "custom-command-list@storageb.github.com"
-  "dash-to-dock@micxgx.gmail.com"
   "hide-minimized@danigm.net"
   "hotedge@jonathan.jdoda.ca"
   "just-perfection-desktop@just-perfection"
@@ -18,7 +17,8 @@ extensions=(
   "Studi-Brightness-Control@matey-0"
   "lightning-gnome-launcher@avimanyu"
   "disable-workspace-switch-animation@osmancevik"
-  "tiling-assistant@leleat-on-github"
+  "tilingshell@ferrarodomenico.com"
+  "BudsLink-Companion@maniacx.github.com"
 )
 
 for ext in "${extensions[@]}"; do

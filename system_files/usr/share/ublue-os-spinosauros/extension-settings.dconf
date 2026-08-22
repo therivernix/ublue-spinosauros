@@ -1,3 +1,12 @@
+[BudsLink-Companion]
+circle-widget-custom-colors=['#ff7800', '#ff7800', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931']
+enable-battery-indicator-text=true
+enable-multi-indicator-mode=false
+indicator-type=0
+level-indicator-color=1
+level-indicator-custom-colors=['#ff7800', '#ff7800', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931', '#15c931']
+level-indicator-type=0
+
 [Logo-menu]
 hide-forcequit=true
 menu-button-extensions-app='com.mattjakeman.ExtensionManager.desktop'
@@ -44,48 +53,31 @@ rounded-blur-found=false
 settings-version=2
 
 [blur-my-shell/appfolder]
-brightness=0.59999999999999998
-sigma=30
+blur=false
 
 [blur-my-shell/applications]
-blur=false
-brightness=0.59999999999999998
 pipeline='pipeline_default'
-static-blur=false
-whitelist=['*']
 
 [blur-my-shell/coverflow-alt-tab]
 pipeline='pipeline_default'
 
 [blur-my-shell/dash-to-dock]
 blur=false
-brightness=0.59999999999999998
-override-background=true
 pipeline='pipeline_default_rounded'
-sigma=30
-static-blur=true
-style-dash-to-dock=0
-
-[blur-my-shell/dash-to-panel]
-blur-original-panel=true
 
 [blur-my-shell/lockscreen]
 pipeline='pipeline_default'
 
 [blur-my-shell/overview]
-blur=true
 pipeline='pipeline_default'
-style-components=1
 
 [blur-my-shell/panel]
-blur=true
-brightness=0.59999999999999998
-corner-radius=0
+blur=false
+brightness=0.80000000000000004
 force-light-text=true
 override-background=true
-override-background-dynamically=false
 pipeline='pipeline_default'
-sigma=30
+sigma=1
 static-blur=false
 style-panel=0
 
@@ -98,10 +90,6 @@ style-popup=3
 [blur-my-shell/screenshot]
 pipeline='pipeline_default'
 
-[blur-my-shell/window-list]
-brightness=0.59999999999999998
-sigma=30
-
 [bottom-dash-panel]
 accent-color=true
 auto-hide=false
@@ -112,18 +100,18 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=2
+indicator-position-max=1
 user-enabled=true
 
 [clipboard-indicator]
-blink-icon-on-copy=true
+blink-icon-on-copy=false
 clear-history-interval=1440
 clear-history-on-interval=true
 clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1786300148
+next-history-clear=1787433862
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
@@ -258,8 +246,8 @@ animation-time=0.15000000000000002
 apply-custom-theme=false
 autohide=true
 autohide-in-fullscreen=true
-background-color='rgb(17,17,17)'
-background-opacity=0.40000000000000002
+background-color='rgb(0,0,0)'
+background-opacity=1.0
 click-action='previews'
 custom-background-color=true
 custom-theme-shrink=false
@@ -295,7 +283,7 @@ shortcut-timeout=2.0
 show-apps-always-in-the-edge=true
 show-apps-at-top=false
 show-delay=0.10000000000000002
-transparency-mode='FIXED'
+transparency-mode='DYNAMIC'
 
 [dash-to-panel]
 animate-appicon-hover=false
@@ -341,6 +329,17 @@ mounted-icon=true
 overview-transparent-background=false
 trash-icon=true
 
+[ding]
+arrangeorder='KIND'
+check-x11wayland=true
+keep-arranged=true
+keep-stacked=false
+show-home=false
+show-trash=false
+sort-special-folders=true
+start-corner='top-right'
+unstackedtypes=@as []
+
 [gradia-companion]
 tool-settings={'freehand': ('#000000', 3.0), 'rectangle': ('#44cc44', 3.0), 'solid-rectangle': ('#000000', 3.0), 'highlighter': ('#ffdd00', 4.0), 'arrow': ('#000000', 3.0), 'stamp': ('#000000', 3.0), 'select': ('#000000', 4.0)}
 
@@ -366,6 +365,8 @@ activities-button=true
 animation=1
 dash-app-running=false
 events-button=false
+panel=true
+panel-in-overview=false
 support-notifier-showed-version=36
 support-notifier-type=0
 top-panel-position=0
@@ -389,6 +390,23 @@ nightthemeswitcher-ondemand-keybinding=['<Shift><Super>t']
 sunrise=7.0
 sunset=20.0
 
+[o-tiling]
+active-hint-overlay-enabled=false
+cleared-system-bindings='{}'
+gap-inner=uint32 2
+gap-outer=uint32 2
+hide-panel-icon=true
+panel-transparency=true
+panel-transparency-opacity=uint32 50
+quick-settings-toggle=true
+show-overview-button-in-indicator=false
+skip-overview=false
+theme-consistency-style='default'
+window-animation-style='default'
+workspace-animation-style='none'
+workspace-number-indicator=true
+workspace-switcher-style=true
+
 [quick-settings-audio-panel]
 add-button-applications-output-reset-to-default=true
 always-show-input-volume-slider=false
@@ -399,13 +417,13 @@ create-perdevice-volume-sliders=false
 create-profile-switcher=false
 group-applications-volume-sliders=false
 master-volume-sliders-show-current-device=false
-merged-panel-position='bottom'
+merged-panel-position='top'
 move-input-volume-slider=true
 move-output-volume-slider=true
 mpris-controllers-are-moved=true
 panel-type='independent-panel'
 perdevice-volume-sliders-change-menu=true
-profiles-renames={'Radeon High Definition Audio Controller': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'HiFi': ('Play HiFi quality Music', 'Play HiFi quality Music'), 'output:hdmi-surround71-extra3': ('Digital Surround 7.1 (HDMI 4) Output', 'Digital Surround 7.1 (HDMI 4) Output'), 'output:hdmi-surround-extra3': ('Digital Surround 5.1 (HDMI 4) Output', 'Digital Surround 5.1 (HDMI 4) Output'), 'output:hdmi-surround71-extra2': ('Digital Surround 7.1 (HDMI 3) Output', 'Digital Surround 7.1 (HDMI 3) Output'), 'output:hdmi-surround-extra2': ('Digital Surround 5.1 (HDMI 3) Output', 'Digital Surround 5.1 (HDMI 3) Output'), 'output:hdmi-surround71-extra1': ('Digital Surround 7.1 (HDMI 2) Output', 'Digital Surround 7.1 (HDMI 2) Output'), 'output:hdmi-surround-extra1': ('Digital Surround 5.1 (HDMI 2) Output', 'Digital Surround 5.1 (HDMI 2) Output'), 'output:hdmi-surround71': ('Digital Surround 7.1 (HDMI) Output', 'Digital Surround 7.1 (HDMI) Output'), 'output:hdmi-surround': ('Digital Surround 5.1 (HDMI) Output', 'Digital Surround 5.1 (HDMI) Output'), 'output:hdmi-stereo-extra3': ('Digital Stereo (HDMI 4) Output', 'Digital Stereo (HDMI 4) Output'), 'output:hdmi-stereo-extra2': ('Digital Stereo (HDMI 3) Output', 'Digital Stereo (HDMI 3) Output'), 'output:hdmi-stereo-extra1': ('Digital Stereo (HDMI 2) Output', 'Digital Stereo (HDMI 2) Output'), 'output:hdmi-stereo': ('Digital Stereo (HDMI) Output', 'Digital Stereo (HDMI) Output')}, 'Ryzen HD Audio Controller': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'HiFi (Mic1, Mic2, Speaker)': ('Play HiFi quality Music (Mic1, Mic2, Speaker)', 'Play HiFi quality Music (Mic1, Mic2, Speaker)'), 'HiFi (Headphones, Mic1, Mic2)': ('Play HiFi quality Music (Headphones, Mic1, Mic2)', 'Play HiFi quality Music (Headphones, Mic1, Mic2)'), 'HiFi (Headset, Mic1, Speaker)': ('Play HiFi quality Music (Headset, Mic1, Speaker)', 'Play HiFi quality Music (Headset, Mic1, Speaker)'), 'HiFi (Headphones, Headset, Mic1)': ('Play HiFi quality Music (Headphones, Headset, Mic1)', 'Play HiFi quality Music (Headphones, Headset, Mic1)'), 'input:analog-stereo': ('Analog Stereo Input', 'Analog Stereo Input'), 'output:analog-surround-40': ('Analog Surround 4.0 Output', 'Analog Surround 4.0 Output'), 'output:analog-surround-40+input:analog-stereo': ('Analog Surround 4.0 Output + Analog Stereo Input', 'Analog Surround 4.0 Output + Analog Stereo Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:analog-stereo': ('Analog Stereo Duplex', 'Analog Stereo Duplex')}, 'Studio Display': {'off': ('Off', 'Off'), 'input:mono-fallback': ('Mono Input', 'Mono Input'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'output:iec958-stereo': ('Digital Stereo (IEC958) Output', 'Digital Stereo (IEC958) Output'), 'output:iec958-stereo+input:mono-fallback': ('Digital Stereo (IEC958) Output + Mono Input', 'Digital Stereo (IEC958) Output + Mono Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:mono-fallback': ('Analog Stereo Output + Mono Input', 'Analog Stereo Output + Mono Input')}, 'Built-in Audio': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'input:analog-stereo': ('Analog Stereo Input', 'Analog Stereo Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:analog-stereo': ('Analog Stereo Duplex', 'Analog Stereo Duplex')}}
+profiles-renames={'Radeon High Definition Audio Controller': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'HiFi': ('Play HiFi quality Music', 'Play HiFi quality Music'), 'output:hdmi-surround71-extra3': ('Digital Surround 7.1 (HDMI 4) Output', 'Digital Surround 7.1 (HDMI 4) Output'), 'output:hdmi-surround-extra3': ('Digital Surround 5.1 (HDMI 4) Output', 'Digital Surround 5.1 (HDMI 4) Output'), 'output:hdmi-surround71-extra2': ('Digital Surround 7.1 (HDMI 3) Output', 'Digital Surround 7.1 (HDMI 3) Output'), 'output:hdmi-surround-extra2': ('Digital Surround 5.1 (HDMI 3) Output', 'Digital Surround 5.1 (HDMI 3) Output'), 'output:hdmi-surround71-extra1': ('Digital Surround 7.1 (HDMI 2) Output', 'Digital Surround 7.1 (HDMI 2) Output'), 'output:hdmi-surround-extra1': ('Digital Surround 5.1 (HDMI 2) Output', 'Digital Surround 5.1 (HDMI 2) Output'), 'output:hdmi-surround71': ('Digital Surround 7.1 (HDMI) Output', 'Digital Surround 7.1 (HDMI) Output'), 'output:hdmi-surround': ('Digital Surround 5.1 (HDMI) Output', 'Digital Surround 5.1 (HDMI) Output'), 'output:hdmi-stereo-extra3': ('Digital Stereo (HDMI 4) Output', 'Digital Stereo (HDMI 4) Output'), 'output:hdmi-stereo-extra2': ('Digital Stereo (HDMI 3) Output', 'Digital Stereo (HDMI 3) Output'), 'output:hdmi-stereo-extra1': ('Digital Stereo (HDMI 2) Output', 'Digital Stereo (HDMI 2) Output'), 'output:hdmi-stereo': ('Digital Stereo (HDMI) Output', 'Digital Stereo (HDMI) Output')}, 'Ryzen HD Audio Controller': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'HiFi (Mic1, Mic2, Speaker)': ('Play HiFi quality Music (Mic1, Mic2, Speaker)', 'Play HiFi quality Music (Mic1, Mic2, Speaker)'), 'HiFi (Headphones, Mic1, Mic2)': ('Play HiFi quality Music (Headphones, Mic1, Mic2)', 'Play HiFi quality Music (Headphones, Mic1, Mic2)'), 'HiFi (Headset, Mic1, Speaker)': ('Play HiFi quality Music (Headset, Mic1, Speaker)', 'Play HiFi quality Music (Headset, Mic1, Speaker)'), 'HiFi (Headphones, Headset, Mic1)': ('Play HiFi quality Music (Headphones, Headset, Mic1)', 'Play HiFi quality Music (Headphones, Headset, Mic1)'), 'input:analog-stereo': ('Analog Stereo Input', 'Analog Stereo Input'), 'output:analog-surround-40': ('Analog Surround 4.0 Output', 'Analog Surround 4.0 Output'), 'output:analog-surround-40+input:analog-stereo': ('Analog Surround 4.0 Output + Analog Stereo Input', 'Analog Surround 4.0 Output + Analog Stereo Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:analog-stereo': ('Analog Stereo Duplex', 'Analog Stereo Duplex')}, 'Studio Display': {'off': ('Off', 'Off'), 'input:mono-fallback': ('Mono Input', 'Mono Input'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'output:iec958-stereo': ('Digital Stereo (IEC958) Output', 'Digital Stereo (IEC958) Output'), 'output:iec958-stereo+input:mono-fallback': ('Digital Stereo (IEC958) Output + Mono Input', 'Digital Stereo (IEC958) Output + Mono Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:mono-fallback': ('Analog Stereo Output + Mono Input', 'Analog Stereo Output + Mono Input')}, 'Built-in Audio': {'off': ('Off', 'Off'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'input:analog-stereo': ('Analog Stereo Input', 'Analog Stereo Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:analog-stereo': ('Analog Stereo Duplex', 'Analog Stereo Duplex')}, 'MOMENTUM 4': {'off': ('Off', 'Off'), 'headset-head-unit-cvsd': ('Headset Head Unit (HSP/HFP, codec CVSD)', 'Headset Head Unit (HSP/HFP, codec CVSD)'), 'headset-head-unit': ('Headset Head Unit (HSP/HFP, codec MSBC)', 'Headset Head Unit (HSP/HFP, codec MSBC)'), 'a2dp-sink-sbc_xq': ('High Fidelity Playback (A2DP Sink, codec SBC-XQ)', 'High Fidelity Playback (A2DP Sink, codec SBC-XQ)'), 'a2dp-sink-sbc': ('High Fidelity Playback (A2DP Sink, codec SBC)', 'High Fidelity Playback (A2DP Sink, codec SBC)'), 'a2dp-sink-aac': ('High Fidelity Playback (A2DP Sink, codec AAC)', 'High Fidelity Playback (A2DP Sink, codec AAC)'), 'a2dp-sink-aptx': ('High Fidelity Playback (A2DP Sink, codec aptX)', 'High Fidelity Playback (A2DP Sink, codec aptX)'), 'a2dp-sink': ('High Fidelity Playback (A2DP Sink, codec aptX HD)', 'High Fidelity Playback (A2DP Sink, codec aptX HD)')}, 'BTD 600': {'off': ('Off', 'Off'), 'input:mono-fallback': ('Mono Input', 'Mono Input'), 'pro-audio': ('Pro Audio', 'Pro Audio'), 'output:iec958-stereo': ('Digital Stereo (IEC958) Output', 'Digital Stereo (IEC958) Output'), 'output:iec958-stereo+input:mono-fallback': ('Digital Stereo (IEC958) Output + Mono Input', 'Digital Stereo (IEC958) Output + Mono Input'), 'output:analog-stereo': ('Analog Stereo Output', 'Analog Stereo Output'), 'output:analog-stereo+input:mono-fallback': ('Analog Stereo Output + Mono Input', 'Analog Stereo Output + Mono Input')}, 'Tommy (SONOS D87A)': {'off': ('Off', 'Off'), 'a2dp-sink-sbc_xq': ('High Fidelity Playback (A2DP Sink, codec SBC-XQ)', 'High Fidelity Playback (A2DP Sink, codec SBC-XQ)'), 'a2dp-sink-sbc': ('High Fidelity Playback (A2DP Sink, codec SBC)', 'High Fidelity Playback (A2DP Sink, codec SBC)'), 'a2dp-sink': ('High Fidelity Playback (A2DP Sink, codec AAC)', 'High Fidelity Playback (A2DP Sink, codec AAC)')}, 'AirPods - Find My': {'off': ('Off', 'Off'), 'a2dp-sink-sbc_xq': ('High Fidelity Playback (A2DP Sink, codec SBC-XQ)', 'High Fidelity Playback (A2DP Sink, codec SBC-XQ)'), 'a2dp-sink-sbc': ('High Fidelity Playback (A2DP Sink, codec SBC)', 'High Fidelity Playback (A2DP Sink, codec SBC)'), 'a2dp-sink': ('High Fidelity Playback (A2DP Sink, codec AAC)', 'High Fidelity Playback (A2DP Sink, codec AAC)'), 'headset-head-unit-cvsd': ('Headset Head Unit (HSP/HFP, codec CVSD)', 'Headset Head Unit (HSP/HFP, codec CVSD)'), 'headset-head-unit-msbc': ('Headset Head Unit (HSP/HFP, codec MSBC)', 'Headset Head Unit (HSP/HFP, codec MSBC)'), 'headset-head-unit': ('Headset Head Unit (HSP/HFP, codec LC3-24kHz)', 'Headset Head Unit (HSP/HFP, codec LC3-24kHz)')}}
 remove-output-volume-slider=false
 version=2
 widgets-order=['profile-switcher', 'mpris-controllers', 'output-volume-slider', 'perdevice-volume-sliders', 'input-volume-slider', 'balance-slider', 'applications-volume-sliders']
@@ -439,6 +457,58 @@ show-panel-icon=true
 window-effect=0
 window-effect-color=(0.0, 0.0, 0.0, 1.0)
 
+[simple-taskbar]
+activities-button-position='left'
+activities-button-visible=true
+app-alignment='center'
+application-overflow-style='taskbar'
+clock-position='right'
+combine-app-buttons-mode='always'
+custom-indicator-colors-enabled=false
+custom-panel-color-enabled=false
+default-gnome-panel=false
+folder-menu-enabled=true
+folder-menu-position='right'
+folder-menu-uri='file:///var/home/tg/Downloads'
+gnome-start-button-visible=true
+grid-alt-tab-enabled=true
+hide-pinned-taskbar-apps=false
+hot-edge-overview-enabled=true
+icon-size=32
+icon-spacing=3
+match-icon-color=false
+multi-monitor-panels=true
+multi-window-click-spread=true
+nautilus-places-enabled=true
+panel-autohide-enabled=false
+panel-border-enabled=false
+panel-border-light-enabled=false
+panel-button-padding=-1
+panel-height=49
+panel-item-order=['left-box', 'center-box', 'folder-menu', 'start-button', 'activities', 'applications', 'tray-overflow', 'right-box', 'system-menu', 'clock', 'show-desktop']
+panel-position='top'
+panel-theme='dark'
+panel-theme-follow-system=true
+running-indicator-style='rounded'
+show-desktop-button-position='right'
+show-desktop-button-visible=false
+start-button-position='center'
+start-menu-displaced-overlay-key=@as []
+start-menu-super-key=true
+start-menu-super-tab=false
+system-menu-position='right'
+target-prefs-page=''
+task-manager-app='io.missioncenter.MissionCenter.desktop'
+taskbar-locked=true
+transparency-enabled=false
+transparency-level=20
+tray-overflow-enabled=true
+tray-overflow-position='right'
+use-pinned-apps-as-launchers=false
+volume-mixer-enabled=false
+windows-start-menu-enabled=false
+windows-xp-theme-enabled=false
+
 [tiling-assistant]
 activate-layout0=@as []
 activate-layout1=@as []
@@ -454,7 +524,6 @@ focus-hint=0
 focus-hint-color='rgb(53,132,228)'
 import-layout-examples=false
 last-version-installed=54
-overridden-settings={'org.gnome.mutter.edge-tiling': <@mb nothing>, 'org.gnome.desktop.wm.keybindings.maximize': <@mb nothing>, 'org.gnome.desktop.wm.keybindings.unmaximize': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-left': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-right': <@mb nothing>}
 restore-window=['<Super>Down']
 search-popup-layout=@as []
 tile-bottom-half=['<Super>KP_2']
@@ -484,37 +553,46 @@ toggle-tiling-popup=@as []
 active-screen-edges=true
 cycle-layouts=['<Alt><Super>c']
 cycle-layouts-backward=['<Shift><Alt><Super>c']
-edge-tiling-mode='default'
+edge-tiling-mode='adaptive'
 enable-autotiling=false
 enable-blur-selected-tilepreview=false
 enable-blur-snap-assistant=false
 enable-screen-edges-windows-suggestions=true
+enable-smart-window-border-radius=true
 enable-snap-assist=true
 enable-snap-assistant-windows-suggestions=true
 enable-tiling-system-windows-suggestions=true
-focus-window-down=['']
-focus-window-left=['']
-focus-window-next=['']
-focus-window-prev=['']
-focus-window-right=['']
-focus-window-up=['']
+enable-window-border=false
+focus-window-down=['<Alt>k']
+focus-window-left=['<Alt>h']
+focus-window-next=['<Alt>n']
+focus-window-prev=['<Alt>p']
+focus-window-right=['<Alt>l']
+focus-window-up=['<Alt>j']
+highlight-current-window=['<Alt><Super>m']
 inner-gaps=uint32 4
 last-version-name-installed='17.3'
-layouts-json='[{"id":"14465636","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.4999999999999993,"height":1,"groups":[1]}]},{"id":"23462020","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.5000000000000004,"height":0.5,"groups":[2,1]},{"x":0.5,"y":0.5,"width":0.5000000000000004,"height":0.5,"groups":[2,1]}]},{"id":"Layout 1","tiles":[{"x":0,"y":0,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0,"y":0.5,"width":0.22,"height":0.5,"groups":[1,2]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[2,3]},{"x":0.78,"y":0,"width":0.22,"height":0.5,"groups":[3,4]},{"x":0.78,"y":0.5,"width":0.22,"height":0.5,"groups":[3,4]}]},{"id":"Layout 2","tiles":[{"x":0,"y":0,"width":0.22,"height":1,"groups":[1]},{"x":0.22,"y":0,"width":0.56,"height":1,"groups":[1,2]},{"x":0.78,"y":0,"width":0.22,"height":1,"groups":[2]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]}]'
-move-window-down=['']
-move-window-left=['']
-move-window-right=['']
-move-window-up=['']
+layouts-json='[{"id":"14465636","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.4999999999999993,"height":1,"groups":[1]}]},{"id":"23462020","tiles":[{"x":0,"y":0,"width":0.5,"height":1,"groups":[1]},{"x":0.5,"y":0,"width":0.5000000000000004,"height":0.5,"groups":[2,1]},{"x":0.5,"y":0.5,"width":0.5000000000000004,"height":0.5,"groups":[2,1]}]},{"id":"Layout 3","tiles":[{"x":0,"y":0,"width":0.33,"height":1,"groups":[1]},{"x":0.33,"y":0,"width":0.67,"height":1,"groups":[1]}]},{"id":"Layout 4","tiles":[{"x":0,"y":0,"width":0.67,"height":1,"groups":[1]},{"x":0.67,"y":0,"width":0.33,"height":1,"groups":[1]}]}]'
+move-window-center=['']
+move-window-down=['<Alt><Super>k']
+move-window-left=['<Alt><Super>h']
+move-window-right=['<Alt><Super>l']
+move-window-up=['<Alt><Super>j']
 outer-gaps=uint32 4
-overridden-settings="{\"org.gnome.mutter.keybindings\":{\"toggle-tiled-right\":\"['<Super>Right']\",\"toggle-tiled-left\":\"['<Super>Left']\"},\"org.gnome.desktop.wm.keybindings\":{\"maximize\":\"['<Super>Up']\",\"unmaximize\":\"['<Super>Down']\"},\"org.gnome.mutter\":{\"edge-tiling\":\"false\"}}"
+overridden-settings="{\"org.gnome.mutter.keybindings\":{\"toggle-tiled-right\":\"['<Super>Right']\",\"toggle-tiled-left\":\"['<Super>Left']\"},\"org.gnome.desktop.wm.keybindings\":{\"maximize\":\"['<Super>Up']\",\"unmaximize\":\"['<Super>Down']\"},\"org.gnome.mutter\":{\"edge-tiling\":\"true\"}}"
 quarter-tiling-threshold=uint32 25
-selected-layouts=[['14465636'], ['14465636'], ['14465636'], ['14465636']]
+selected-layouts=[['14465636'], ['14465636'], ['14465636'], ['Layout 3']]
 show-indicator=false
 snap-assist-sync-layout=true
-span-multiple-tiles-activation-key=['0']
-span-window-left=['']
-span-window-right=['']
-tiling-system-activation-key=['0']
-tiling-system-deactivation-key=['1']
+span-multiple-tiles-activation-key=['1']
+span-window-all-tiles=['<Control><Alt><Super>Return']
+span-window-down=['<Control><Alt><Super>k']
+span-window-left=['<Control><Alt><Super>h']
+span-window-right=['<Control><Alt><Super>l']
+span-window-up=['<Control><Alt><Super>j']
+tiling-system-activation-key=['1']
+tiling-system-deactivation-key=['0']
 top-edge-maximize=true
+untile-window=['<Control><Alt><Super>backslash']
+window-border-width=uint32 3
 window-use-custom-border-color=false
