@@ -35,6 +35,9 @@ rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
 rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 
+# Removing flatpaks
+rm -rf /var/lib/flatpak/app/org.gnome.Calendar
+
 # build custom schemas
 #glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
 
