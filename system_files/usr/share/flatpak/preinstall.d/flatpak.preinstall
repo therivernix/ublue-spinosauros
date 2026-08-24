@@ -269,3 +269,7 @@ IsRuntime=false
 [Flatpak Preinstall org.pulseaudio.pavucontrol]
 Branch=stable
 IsRuntime=false
+
+[Flatpak Preinstall dev.mufeed.Wordbook]
+Branch=stable
+IsRuntime=false
