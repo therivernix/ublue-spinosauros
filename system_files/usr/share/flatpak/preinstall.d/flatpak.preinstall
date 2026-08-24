@@ -265,3 +265,7 @@ IsRuntime=false
 [Flatpak Preinstall page.tesk.Refine]
 Branch=stable
 IsRuntime=false
+
+[Flatpak Preinstall org.pulseaudio.pavucontrol]
+Branch=stable
+IsRuntime=false
