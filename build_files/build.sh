@@ -2,6 +2,16 @@
 
 set -ouex pipefail
 
+# Removing built-in extensions
+rm -rf /usr/share/gnome-shell/extensions/search-light@icedman.github.com
+rm -rf /usr/share/gnome-shell/extensions/apps-menu@gnome-shell-extensions.gcampax.github.com
+rm -rf /usr/share/gnome-shell/extensions/launch-new-instance@gnome-shell-extensions.gcampax.github.com
+rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcampax.github.com
+rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
+rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
+rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
+rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
+
 # Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
 
@@ -25,16 +35,6 @@ dnf5 remove -y gnome-tweaks
 # dnf5 -y install package
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
-
-# Removing built-in extensions
-rm -rf /usr/share/gnome-shell/extensions/search-light@icedman.github.com
-rm -rf /usr/share/gnome-shell/extensions/apps-menu@gnome-shell-extensions.gcampax.github.com
-rm -rf /usr/share/gnome-shell/extensions/launch-new-instance@gnome-shell-extensions.gcampax.github.com
-rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcampax.github.com
-rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
-rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
-rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
-rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 
 # build custom schemas
 #glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
