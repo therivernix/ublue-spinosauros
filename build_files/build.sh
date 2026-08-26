@@ -14,8 +14,8 @@ cp -avf "/ctx/system_files"/. /
 
 
 # this installs a package from fedora repos
-# dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config steam
-#dnf5 install -y firefox firefox-langpacks
+dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config steam
+dnf5 remove -y gnome-tweaks
 #dnf5 install -y /usr/share/ublue-os-spinosauros/rpm/Psysonic-1.50.0-1.x86_64.rpm
 
 # Use a COPR Example:
@@ -24,9 +24,6 @@ cp -avf "/ctx/system_files"/. /
 # dnf5 -y install package
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
-
-# build custom schemas
-#glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
 
 # Removing built-in extensions
 rm -rf /usr/share/gnome-shell/extensions/search-light@icedman.github.com
@@ -37,6 +34,9 @@ rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
 rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
+
+# build custom schemas
+#glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
 
 #### Example for enabling a System Unit File
 
