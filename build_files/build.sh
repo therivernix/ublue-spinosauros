@@ -12,11 +12,8 @@ cp -avf "/ctx/system_files"/. /
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-
 # this installs a package from fedora repos
-dnf5 install -y tmux firefox firefox-langpacks cargo android-tools systemd-devel pkgconf-pkg-config steam
-dnf5 remove -y gnome-tweaks
-#dnf5 install -y /usr/share/ublue-os-spinosauros/rpm/Psysonic-1.50.0-1.x86_64.rpm
+dnf5 install -y firefox firefox-langpacks
 
 # Use a COPR Example:
 #
@@ -34,9 +31,6 @@ rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
 rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
-
-# build custom schemas
-#glib-compile-schemas /usr/share/glib-2.0/schemas &>/dev/null
 
 #### Example for enabling a System Unit File
 
