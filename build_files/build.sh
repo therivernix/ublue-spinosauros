@@ -2,6 +2,8 @@
 
 set -ouex pipefail
 
+rm -f /etc/dconf/db/distro.d/02-bluefin-keybindings
+
 # Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
 
