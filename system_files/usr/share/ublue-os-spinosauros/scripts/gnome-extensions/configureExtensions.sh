@@ -11,7 +11,7 @@ mkdir -p "$(dirname "$SENTINEL")"
 
 touch "$SENTINEL"
 
-dconf load /org/gnome/shell/extensions/ < /usr/share/ublue-os-spinosauros/extension-settings.dconf
+dconf load /org/gnome/shell/extensions/ < /usr/share/ublue-os-spinosauros/dconf/extension-settings.dconf
 
 extensions=(
   "appindicatorsupport@rgcjonas.gmail.com"
