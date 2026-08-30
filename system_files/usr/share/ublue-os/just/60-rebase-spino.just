@@ -1,2 +1,2 @@
 spino-rebase:
-    bash /usr/share/ublue-os-spinosauros/rebase-spino.sh
+    bash /usr/share/ublue-os-spinosauros/scripts/rpm-ostree/rebase-spino.sh
