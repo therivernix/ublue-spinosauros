@@ -35,6 +35,10 @@ rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
 rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 
+# Compile GSettings schemas for GNOME extensions
+find /usr/share/gnome-shell/extensions -type d -name schemas \
+    -exec glib-compile-schemas {} \;
+
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
