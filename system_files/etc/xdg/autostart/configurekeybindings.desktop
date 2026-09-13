@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Configure Keybindings
+Exec=/usr/share/ublue-os-spinosauros/scripts/gnome/configureKeybindings.sh
+OnlyShowIn=GNOME;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

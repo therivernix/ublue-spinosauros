@@ -3,13 +3,8 @@
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Super>Return'
-command='xdg-terminal-exec'
+command='ptyxis'
 name='Terminal'
-
-[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
-binding='<Control><Alt>Return'
-command='xdg-terminal-exec'
-name='Terminal Alt'
 
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
 binding='<Control><Shift>Escape'
