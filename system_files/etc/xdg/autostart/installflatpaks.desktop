@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Configure Extensions
+Name=Install Flatpaks
 Exec=/usr/share/ublue-os-spinosauros/scripts/flatpaks/installFlatpaks.sh
 OnlyShowIn=GNOME;
 NoDisplay=true

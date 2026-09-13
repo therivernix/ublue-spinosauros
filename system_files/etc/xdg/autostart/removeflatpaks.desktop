@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Configure Extensions
+Name=Remove Flatpaks
 Exec=/usr/share/ublue-os-spinosauros/scripts/flatpaks/removeFlatpaks.sh
 OnlyShowIn=GNOME;
 NoDisplay=true
