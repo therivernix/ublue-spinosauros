@@ -1,8 +1,72 @@
 spino-update-flatpaks:
     flatpak update -y
-    
+
 spino-remove-flatpaks:
-    bash /usr/share/ublue-os-spinosauros/scripts/flatpaks/removeFlatpaks.sh
-    
+    flatpak uninstall -y \
+        org.gnome.Calendar \
+        org.gnome.Contacts \
+        org.mozilla.firefox \
+        org.mozilla.thunderbird \
+        org.mozilla.thunderbird_esr \
+        org.mozilla.thunderbird_esr.Locale \
+        org.gnome.font-viewer \
+        org.gnome.Characters \
+        org.gnome.Maps \
+        org.gnome.DejaDup \
+        org.gnome.Connections \
+        org.gnome.Weather \
+        org.gnome.Extensions
+
 spino-install-flatpaks:
-    bash /usr/share/ublue-os-spinosauros/scripts/flatpaks/installFlatpaks.sh
+    APPS=(
+        app.drey.EarTag
+        be.alexandervanhee.gradia
+        ca.desrt.dconf-editor
+        com.fastmail.Fastmail
+        com.github.tchx84.Flatseal
+        com.github.xournalpp.xournalpp
+        com.mattjakeman.ExtensionManager
+        com.ranfdev.DistroShelf
+        com.synology.SynologyDrive
+        com.yubico.yubioath
+        io.github.flattool.Ignition
+        io.github.flattool.Warehouse
+        io.github.kolunmi.Bazaar
+        io.github.maniacx.BudsLink
+        io.github.plrigaux.sysd-manager
+        io.github.screwys.Rufin
+        io.github.tobagin.keysmith
+        io.missioncenter.MissionCenter
+        it.mijorus.gearlever
+        it.mijorus.smile
+        md.obsidian.Obsidian
+        org.fedoraproject.MediaWriter
+        org.gnome.Calculator
+        org.gnome.Decibels
+        org.gnome.Epiphany
+        org.gnome.FileRoller
+        org.gnome.Firmware
+        org.gnome.Logs
+        org.gnome.Loupe
+        org.gnome.NautilusPreviewer
+        org.gnome.Showtime
+        org.gnome.SimpleScan
+        org.gnome.Snapshot
+        org.gnome.SoundRecorder
+        org.gnome.TextEditor
+        org.gnome.World.PikaBackup
+        org.gnome.baobab
+        org.gnome.clocks
+        org.libreoffice.LibreOffice
+        org.nickvision.tubeconverter
+        org.remmina.Remmina
+        org.signal.Signal
+        page.codeberg.libre_menu_editor.LibreMenuEditor
+        page.tesk.Refine
+        org.pulseaudio.pavucontrol
+        dev.mufeed.Wordbook
+    )
+
+    for app in "${APPS[@]}"; do
+        flatpak install --system -y flathub "$app"
+    done
