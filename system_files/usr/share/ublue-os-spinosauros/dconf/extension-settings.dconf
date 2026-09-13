@@ -9,8 +9,10 @@ level-indicator-type=0
 
 [Logo-menu]
 hide-forcequit=true
+hide-icon-shadow=false
+hide-warehouse=true
 menu-button-extensions-app='com.mattjakeman.ExtensionManager.desktop'
-menu-button-icon-image=30
+menu-button-icon-image=4
 menu-button-icon-size=20
 menu-button-software-center='/usr/bin/flatpak run io.github.kolunmi.Bazaar'
 menu-button-system-monitor='/usr/bin/missioncenter-helper'
@@ -21,6 +23,9 @@ show-gamemode=false
 show-lockscreen=false
 show-power-option=false
 symbolic-icon=true
+
+[add-to-steam]
+use-nautilus=false
 
 [advanced-alt-tab-window-switcher]
 animation-time-factor=100
@@ -53,6 +58,8 @@ rounded-blur-found=true
 settings-version=2
 
 [blur-my-shell/applications]
+blur=true
+enable-all=true
 pipeline='pipeline_default'
 
 [blur-my-shell/coverflow-alt-tab]
@@ -75,9 +82,9 @@ pipeline='pipeline_default'
 static-blur=false
 
 [blur-my-shell/popup]
-blur=false
+blur=true
 pipeline='pipeline_default_rounded'
-static-blur=true
+static-blur=false
 style-popup=3
 
 [blur-my-shell/screenshot]
@@ -93,7 +100,7 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=3
+indicator-position-max=2
 user-enabled=true
 
 [clipboard-indicator]
@@ -104,7 +111,7 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1789141714
+next-history-clear=1789381190
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
@@ -145,7 +152,7 @@ command36=('---', '', '', true)
 command37=('Customize Menu', 'gnome-extensions prefs custom-command-list@storageb.github.com', 'document-edit-symbolic', true)
 command38=('', '', '', true)
 command39=('', '', '', true)
-command4=('Synology Drive', 'nautilus ~/SynologyDrive', 'folder-remote-symbolic', false)
+command4=('Synology Drive', 'nautilus ~/SynologyDrive', 'folder-remote-symbolic', true)
 command40=('', '', '', true)
 command41=('', '', '', true)
 command42=('', '', '', true)
@@ -156,7 +163,7 @@ command46=('', '', '', true)
 command47=('', '', '', true)
 command48=('', '', '', true)
 command49=('', '', '', true)
-command5=('---', '', '', false)
+command5=('---', '', '', true)
 command50=('', '', '', true)
 command51=('', '', '', true)
 command52=('', '', '', true)
