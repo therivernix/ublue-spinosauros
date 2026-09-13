@@ -3,3 +3,6 @@ spino-update-flatpaks:
     
 spino-remove-flatpaks:
     bash /usr/share/ublue-os-spinosauros/scripts/flatpaks/removeFlatpaks.sh
+    
+spino-install-flatpaks:
+    bash /usr/share/ublue-os-spinosauros/scripts/flatpaks/installFlatpaks.sh
