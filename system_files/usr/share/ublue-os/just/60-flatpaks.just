@@ -18,6 +18,9 @@ spino-remove-flatpaks:
         org.gnome.Extensions
 
 spino-install-flatpaks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
     APPS=(
         app.drey.EarTag
         be.alexandervanhee.gradia
