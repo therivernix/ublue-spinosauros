@@ -14,19 +14,7 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall cafe.avery.Delfin]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall com.brave.Browser]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall com.fastmail.Fastmail]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall com.github.PintaProject.Pinta]
 Branch=stable
 IsRuntime=false
 
@@ -42,15 +30,7 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall com.obsproject.Studio]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall com.ranfdev.DistroShelf]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall com.somaxa8.earx]
 Branch=stable
 IsRuntime=false
 
@@ -58,31 +38,7 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall com.vixalien.sticky]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall com.vscodium.codium]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall com.yubico.yubioath]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall de.leopoldluley.Clapgrep]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall de.swsnr.turnon]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall fr.handbrake.ghb]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall io.github.ans_ibrahim.Memento]
 Branch=stable
 IsRuntime=false
 
@@ -114,23 +70,7 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall io.github.victoralvesf.aonsoku]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall io.github.vikdevelop.SaveDesktop]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall io.gitlab.adhami3310.Impression]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall io.missioncenter.MissionCenter]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall it.dottorblaster.cauldron]
 Branch=stable
 IsRuntime=false
 
@@ -146,19 +86,7 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall nl.andreasknoben.Laser]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall org.fedoraproject.MediaWriter]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall org.filezillaproject.Filezilla]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall org.gaphor.Gaphor]
 Branch=stable
 IsRuntime=false
 
@@ -194,14 +122,6 @@ IsRuntime=false
 Branch=stable
 IsRuntime=false
 
-[Flatpak Preinstall org.gnome.Papers]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall org.gnome.PowerStats]
-Branch=stable
-IsRuntime=false
-
 [Flatpak Preinstall org.gnome.Showtime]
 Branch=stable
 IsRuntime=false
@@ -231,14 +151,6 @@ Branch=stable
 IsRuntime=false
 
 [Flatpak Preinstall org.gnome.clocks]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall org.kde.kdenlive]
-Branch=stable
-IsRuntime=false
-
-[Flatpak Preinstall org.keepassxc.KeePassXC]
 Branch=stable
 IsRuntime=false
 
