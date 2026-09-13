@@ -22,4 +22,5 @@ flatpak uninstall -y org.gnome.Calendar \
         org.gnome.Maps \
         org.gnome.DejaDup \
         org.gnome.Connections \
-        org.gnome.Weather
+        org.gnome.Weather \
+        org.gnome.Extensions
