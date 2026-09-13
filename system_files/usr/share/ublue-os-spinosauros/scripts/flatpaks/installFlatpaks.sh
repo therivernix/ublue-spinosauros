@@ -68,7 +68,7 @@ APPS=(
 )
 
 for app in "${APPS[@]}"; do
-    "$FLATPAK" install -y flathub "$app"
+    "$FLATPAK" install --system -y flathub "$app"
 done
 
 ########################################
