@@ -11,6 +11,11 @@ binding='<Control><Shift>Escape'
 command="flatpak run io.missioncenter.MissionCenter"
 name='mission-center'
 
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4]
+binding='<Super>e'
+command='nautilus'
+name='Nautilus'
+
 [org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3]
 binding='<Control><Alt>BackSpace'
 command="flatpak run com.jeffser.Alpaca"
