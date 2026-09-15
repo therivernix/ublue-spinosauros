@@ -13,8 +13,8 @@ rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcam
 rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
 rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
 rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
-rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
-#rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
+#rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
+rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 
 # Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
