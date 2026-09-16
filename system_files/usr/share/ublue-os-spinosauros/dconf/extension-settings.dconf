@@ -66,8 +66,11 @@ pipeline='pipeline_default'
 pipeline='pipeline_default'
 
 [blur-my-shell/dash-to-dock]
-blur=false
+blur=true
+override-background=true
 pipeline='pipeline_default_rounded'
+static-blur=false
+unblur-in-overview=false
 
 [blur-my-shell/lockscreen]
 pipeline='pipeline_default'
@@ -100,7 +103,7 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=2
+indicator-position-max=1
 user-enabled=true
 
 [clipboard-indicator]
@@ -111,14 +114,14 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1789381190
+next-history-clear=1789631408
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
 toggle-menu=['<Super>v']
 
 [custom-command-list]
-command-order=[1, 2, 4, 5, 6, 7, 8, 9, 3, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+command-order=[1, 2, 4, 5, 6, 7, 8, 9, 3, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 12, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 command1=('Activities Overview', 'dbus-send --session --dest=org.gnome.Shell --type=method_call /org/gnome/Shell org.freedesktop.DBus.Properties.Set string:org.gnome.Shell string:OverviewActive variant:boolean:true', 'focus-windows-symbolic', false)
 command10=('Trash', 'nautilus trash://', 'user-trash-symbolic', true)
 command11=('---', '', '', true)
@@ -132,20 +135,20 @@ command18=('Sound', 'gnome-control-center sound', 'audio-x-generic-symbolic', fa
 command19=('Keyboard', 'gnome-control-center keyboard', 'input-keyboard-symbolic', false)
 command2=('---', '', '', false)
 command20=('---', '', '', false)
-command21=('Configuration Scripts', 'ptyxis -- ujust --choose', 'utilities-terminal-symbolic', false)
-command22=('Extensions', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', false)
+command21=('Configuration Scripts', 'xdg-terminal-exec -- ujust --choose', 'utilities-terminal-symbolic', false)
+command22=('Extensions', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', true)
 command23=('---', '', '', true)
-command24=('Software Update', 'ptyxis -- /usr/bin/ujust update', 'software-update-available-symbolic', true)
-command25=('Firmware Update', 'ptyxis -- /usr/bin/ujust spino-update-firmware', 'application-x-firmware-symbolic', true)
-command26=('Pin Update', 'ptyxis -- /usr/bin/ujust spino-rebase', 'view-pin-symbolic', true)
-command27=('Pause Updates', 'ptyxis -- /usr/bin/ujust toggle-updates', 'media-playback-pause-symbolic', true)
+command24=('Software Update', 'xdg-terminal-exec -- /usr/bin/ujust update', 'software-update-available-symbolic', true)
+command25=('Firmware Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-update-firmware', 'application-x-firmware-symbolic', true)
+command26=('Pin Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-rebase', 'view-pin-symbolic', true)
+command27=('Pause Updates', 'xdg-terminal-exec -- /usr/bin/ujust toggle-updates', 'media-playback-pause-symbolic', true)
 command28=('---', '', '', true)
-command29=('Toggle TPM Unlock', 'ptyxis -- ujust toggle-tpm2', 'changes-prevent-symbolic', false)
+command29=('Toggle TPM Unlock', 'xdg-terminal-exec -- ujust toggle-tpm2', 'changes-prevent-symbolic', false)
 command3=('Downloads', 'nautilus ~/Downloads', 'folder-download-symbolic', true)
-command30=('Manage Passphrases', 'ptyxis -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', false)
+command30=('Manage Passphrases', 'xdg-terminal-exec -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', false)
 command31=('---', '', '', true)
-command32=('Battery Controls', 'ptyxis -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', false)
-command33=('Fan Controls', 'ptyxis -- ujust spino-fancontrol', 'weather-windy-symbolic', false)
+command32=('Battery Controls', 'xdg-terminal-exec -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', false)
+command33=('Fan Controls', 'xdg-terminal-exec -- ujust spino-fancontrol', 'weather-windy-symbolic', false)
 command34=('---', '', '', true)
 command35=('Reboot into UEFI', 'ptyxis -- ujust spino-reboot-into-firmware', 'system-reboot-symbolic', true)
 command36=('---', '', '', true)
@@ -218,7 +221,7 @@ command96=('', '', '', true)
 command97=('', '', '', true)
 command98=('', '', '', true)
 command99=('', '', '', true)
-menuicon-setting='open-menu-symbolic'
+menuicon-setting='ublue-logo'
 menulocation-setting=1
 menuoptions-setting=2
 menuposition-setting=0
@@ -248,12 +251,12 @@ autohide=true
 autohide-in-fullscreen=true
 background-color='rgb(0,0,0)'
 background-opacity=0.0
-click-action='previews'
-custom-background-color=true
+click-action='focus-or-appspread'
+custom-background-color=false
 custom-theme-shrink=false
 customize-alphas=true
 dash-max-icon-size=32
-disable-overview-on-startup=true
+disable-overview-on-startup=false
 dock-fixed=false
 dock-position='BOTTOM'
 extend-height=false
@@ -274,11 +277,11 @@ preferred-monitor-by-connector='eDP-1'
 pressure-threshold=50.0
 preview-size-scale=0.14999999999999999
 require-pressure-to-show=false
-running-indicator-style='DOTS'
+running-indicator-style='DEFAULT'
 shift-click-action='minimize'
 shift-middle-click-action='launch'
-shortcut=['<Super>r']
-shortcut-text='<Super>r'
+shortcut=@as []
+shortcut-text=''
 shortcut-timeout=2.0
 show-apps-always-in-the-edge=true
 show-apps-at-top=false
@@ -352,7 +355,7 @@ other-apps-enabled=true
 other-apps-position=true
 
 [gradia-companion]
-tool-settings={'freehand': ('#000000', 3.0), 'rectangle': ('#44cc44', 3.0), 'solid-rectangle': ('#000000', 3.0), 'highlighter': ('#ffdd00', 4.0), 'arrow': ('#000000', 3.0), 'stamp': ('#000000', 3.0), 'select': ('#000000', 4.0)}
+tool-settings={'freehand': ('#ff4444', 3.0), 'rectangle': ('#ff4444', 3.0), 'solid-rectangle': ('#000000', 3.0), 'highlighter': ('#ffdd00', 4.0), 'arrow': ('#000000', 3.0), 'stamp': ('#000000', 3.0), 'select': ('#000000', 4.0), 'drag': ('#ff4444', 3.0)}
 
 [gsconnect]
 enabled=true
@@ -380,6 +383,7 @@ dash-app-running=false
 events-button=false
 panel=true
 panel-in-overview=false
+startup-status=1
 support-notifier-showed-version=36
 support-notifier-type=0
 top-panel-position=0
@@ -397,11 +401,11 @@ single-column=false
 shortcut-key=['<Super>space']
 
 [nightthemeswitcher/time]
-location=(50.900727669070911, 5.4187500000000002)
-manual-schedule=true
+location=(51.040752648463673, 4.4832200000000002)
+manual-schedule=false
 nightthemeswitcher-ondemand-keybinding=['<Shift><Super>t']
-sunrise=7.0
-sunset=10.0
+sunrise=7.3152364811116755
+sunset=19.917825077805588
 
 [o-tiling]
 active-hint-overlay-enabled=false

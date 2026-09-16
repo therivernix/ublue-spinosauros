@@ -5,7 +5,7 @@ media-static=['gnome-control-center']
 
 [custom-keybindings/custom0]
 binding='<Super>Return'
-command='ptyxis'
+command='xdg-terminal-exec'
 name='Terminal'
 
 [custom-keybindings/custom1]
@@ -30,7 +30,7 @@ name='Settings'
 
 [custom-keybindings/custom14]
 binding='<Super>u'
-command='ptyxis -- /usr/bin/ujust update'
+command='xdg-terminal-exec -- /usr/bin/ujust update'
 name='Update'
 
 [custom-keybindings/custom15]
@@ -47,6 +47,11 @@ name='mission-center'
 binding='<Control><Alt>BackSpace'
 command='flatpak run com.jeffser.Alpaca'
 name='Launch Alpaca'
+
+[custom-keybindings/custom4]
+binding='<Super>e'
+command='nautilus'
+name='Nautilus'
 
 [custom-keybindings/custom5]
 binding='<Control><Alt>space'
