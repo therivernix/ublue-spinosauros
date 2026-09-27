@@ -1,310 +1,281 @@
 #!/usr/bin/env bash
-#
-# Install GNOME Shell extensions system-wide during an image build.
-#
-# Sources:
-#   - extensions.gnome.org for normal GNOME Extensions
-#   - GitHub for ASDB-Brightness-Keys@therivernix and Blur my Shell
-#
-# Intended for immutable Fedora/Silverblue/Bluefin/bootc image builds.
-#
-
 set -euo pipefail
 
 INSTALL_DIR="/usr/share/gnome-shell/extensions"
-# Extensions from extensions.gnome.org.
-EGO_EXTENSIONS=(
-    "AlphabeticalAppGrid@stuarthayhurst"
-    "BudsLink-Companion@maniacx.github.com"
-    "Studi-Brightness-Control@matey-0"
-    "clipboard-indicator@tudmotu.com"
-    "custom-command-list@storageb.github.com"
-    "disable-workspace-switch-animation@osmancevik"
-    "hide-minimized@danigm.net"
-    "hotedge@jonathan.jdoda.ca"
-    "just-perfection-desktop@just-perfection"
-    "light-style@gnome-shell-extensions.gcampax.github.com"
-    "lightning-gnome-launcher@avimanyu"
-    "nightthemeswitcher@romainvigier.fr"
-    "quick-settings-audio-panel@rayzeq.github.io"
-    "smile-extension@mijorus.it"
-    "tailscale-gnome-qs@tailscale-qs.github.io"
-    "tilingshell@ferrarodomenico.com"
+GITHUB_API="https://api.github.com"
+SHELL_VERSION=""
+
+# GitHub projects where an installable release ZIP is preferred. If no usable
+# release ZIP exists, the default branch is inspected and, when necessary,
+# a project-specific source build is used below.
+RELEASE_EXTENSIONS=(
+  "AlphabeticalAppGrid@stuarthayhurst|stuarthayhurst/alphabetical-grid-extension"
+  "Studi-Brightness-Control@matey-0|matey-0/Studi-Brightness-Control"
+  "clipboard-indicator@tudmotu.com|Tudmotu/gnome-shell-extension-clipboard-indicator"
+  "custom-command-list@storageb.github.com|StorageB/custom-command-menu"
+  "disable-workspace-switch-animation@osmancevik|osmancevik/gnome-extension-disable-workspace-switch-animation"
+  "hide-minimized@danigm.net|danigm/hide-minimized"
+  "hotedge@jonathan.jdoda.ca|jdoda/hotedge"
+  "quick-settings-audio-panel@rayzeq.github.io|Rayzeq/quick-settings-audio-panel"
+  "smile-extension@mijorus.it|mijorus/smile-gnome-extension"
+  "tilingshell@ferrarodomenico.com|domferr/tilingshell"
 )
 
-# GitHub-hosted extension.
+# Directly installable source repositories.
+SOURCE_EXTENSIONS=(
+  "BudsLink-Companion@maniacx.github.com|maniacx/BudsLink-Companion|gnome"
+)
+
 ASDB_UUID="ASDB-Brightness-Keys@therivernix"
-ASDB_ZIP_URL="https://github.com/therivernix/ASDB-Brightness-Keys/raw/refs/heads/main/ASDB-Brightness-Keys%40therivernix.zip"
+ASDB_ZIP_URL="https://raw.githubusercontent.com/therivernix/ASDB-Brightness-Keys/main/ASDB-Brightness-Keys%40therivernix.zip"
 
-# GitHub-hosted Blur my Shell.
 BLUR_UUID="blur-my-shell@aunetx"
-BLUR_ZIP_URL="https://github.com/aunetx/blur-my-shell/archive/refs/heads/master.zip"
+BLUR_REPO="https://github.com/aunetx/blur-my-shell.git"
 
-log() {
-    printf '[gnome-extensions] %s\n' "$*"
-}
+JUST_UUID="just-perfection-desktop@just-perfection"
+JUST_REPO="https://github.com/jrahmatzadeh/just-perfection.git"
 
-die() {
-    printf '[gnome-extensions] ERROR: %s\n' "$*" >&2
-    exit 1
-}
+TAILSCALE_UUID="tailscale-gnome-qs@tailscale-qs.github.io"
+TAILSCALE_REPO="https://github.com/tailscale-qs/tailscale-gnome-qs.git"
 
-require_command() {
-    command -v "$1" >/dev/null 2>&1 ||
-        die "Required command not found: $1"
-}
+NIGHT_UUID="nightthemeswitcher@romainvigier.fr"
+NIGHT_REPO="https://gitlab.com/rmnvgr/nightthemeswitcher-gnome-shell-extension.git"
+
+LIGHTNING_UUID="lightning-gnome-launcher@avimanyu"
+LIGHTNING_REPO="https://gitlab.com/rimal.avimanyu/lightning-gnome-launcher-extension.git"
+
+LIGHT_STYLE_UUID="light-style@gnome-shell-extensions.gcampax.github.com"
+
+log() { printf '[gnome-extensions] %s\n' "$*"; }
+die() { printf '[gnome-extensions] ERROR: %s\n' "$*" >&2; exit 1; }
+need() { command -v "$1" >/dev/null 2>&1 || die "Required build command is missing: $1"; }
 
 get_shell_major_version() {
-    local version
-
-    # During a normal Fedora image build, gnome-shell is installed in the image.
-    # rpm is preferred because it does not require a running GNOME session.
-    if command -v rpm >/dev/null 2>&1 && rpm -q gnome-shell >/dev/null 2>&1; then
-        version="$(rpm -q --qf '%{VERSION}\n' gnome-shell | head -n1)"
-    elif command -v gnome-shell >/dev/null 2>&1; then
-        version="$(gnome-shell --version | sed -E 's/.* ([0-9]+).*/\1/')"
-    else
-        die "Could not determine installed GNOME Shell version."
-    fi
-
-    printf '%s\n' "$version" | sed -E 's/^([0-9]+).*/\1/'
+  local v
+  if rpm -q gnome-shell >/dev/null 2>&1; then
+    v="$(rpm -q --qf '%{VERSION}\n' gnome-shell | head -n1)"
+  else
+    v="$(gnome-shell --version | sed -E 's/.* ([0-9]+).*/\1/')"
+  fi
+  sed -E 's/^([0-9]+).*/\1/' <<<"$v"
 }
 
-urlencode() {
-    printf '%s' "$1" | jq -sRr @uri
+supports_shell() {
+  jq -e --arg s "$SHELL_VERSION" '
+    (.["shell-version"] // []) | map(tostring) |
+    any(. == $s or startswith($s + "."))
+  ' "$1" >/dev/null
 }
 
-get_latest_ego_version() {
-    local uuid="$1"
-    local shell_version="$2"
-    local encoded_uuid
-    local url
-    local response
-    local results='[]'
-    local page_results
-    local next
-
-    encoded_uuid="$(urlencode "$uuid")"
-    url="https://extensions.gnome.org/api/v1/extensions/${encoded_uuid}/versions/?page=1&page_size=100"
-
-    while [[ -n "$url" ]]; do
-        response="$(
-            curl --fail --silent --show-error --location \
-                -H 'Accept: application/json' \
-                "$url"
-        )"
-
-        page_results="$(jq -c '.results // []' <<<"$response")"
-        results="$(jq -cn \
-            --argjson old "$results" \
-            --argjson new "$page_results" \
-            '$old + $new'
-        )"
-
-        next="$(jq -r '.next // empty' <<<"$response")"
-        url="$next"
-    done
-
-    # EGO represents compatible Shell versions as major/minor/patch objects.
-    # -1 is a wildcard. Status 3 means the extension version is Active.
-    jq -er \
-        --argjson shell_major "$shell_version" \
-        '
-        def compatible:
-            any(
-                .shell_versions[];
-                (.major == -1 or .major == $shell_major)
-                and (.minor == -1)
-                and (.patch == -1)
-            );
-
-        [
-            .[]
-            | select(.status == 3)
-            | select(compatible)
-        ]
-        | sort_by(.pk)
-        | last
-        | .version
-        ' <<<"$results"
-}
-
-download_ego_extension() {
-    local uuid="$1"
-    local shell_version="$2"
-    local version
-    local encoded_uuid
-    local zip
-    local tmpdir
-    local metadata
-    local extracted_uuid
-
-    log "Looking up $uuid for GNOME Shell $shell_version..."
-
-    version="$(get_latest_ego_version "$uuid" "$shell_version")" || {
-        die "No active EGO release found for $uuid compatible with GNOME Shell $shell_version."
+find_metadata() {
+  local root="$1" uuid="$2" m
+  while IFS= read -r m; do
+    [[ "$(jq -r '.uuid // empty' "$m" 2>/dev/null || true)" == "$uuid" ]] && {
+      printf '%s\n' "$m"; return 0;
     }
-
-    encoded_uuid="$(urlencode "$uuid")"
-
-    log "Downloading $uuid version $version..."
-
-    tmpdir="$(mktemp -d)"
-    trap 'rm -rf "$tmpdir"' RETURN
-
-    zip="$tmpdir/extension.zip"
-
-    curl --fail --silent --show-error --location \
-        -H 'Accept: application/zip' \
-        "https://extensions.gnome.org/api/v1/extensions/${encoded_uuid}/versions/${version}/?format=zip" \
-        -o "$zip"
-
-    unzip -q "$zip" -d "$tmpdir/extracted"
-
-    metadata="$(find "$tmpdir/extracted" -type f -name metadata.json -print -quit)"
-
-    [[ -n "$metadata" ]] ||
-        die "Downloaded archive for $uuid does not contain metadata.json."
-
-    extracted_uuid="$(jq -er '.uuid // empty' "$metadata")"
-
-    [[ "$extracted_uuid" == "$uuid" ]] ||
-        die "UUID mismatch: expected '$uuid', downloaded '$extracted_uuid'."
-
-    install_extension_directory "$uuid" "$(dirname "$metadata")"
-
-    trap - RETURN
-    rm -rf "$tmpdir"
+  done < <(find "$root" -type f -name metadata.json -print)
+  return 1
 }
 
-download_github_extension() {
-    local uuid="$1"
-    local url="$2"
-    local tmpdir
-    local zip
-    local metadata
-    local extracted_uuid
-
-    log "Downloading $uuid from GitHub..."
-
-    tmpdir="$(mktemp -d)"
-    trap 'rm -rf "$tmpdir"' RETURN
-
-    zip="$tmpdir/extension.zip"
-
-    curl --fail --silent --show-error --location \
-        "$url" \
-        -o "$zip"
-
-    unzip -q "$zip" -d "$tmpdir/extracted"
-
-    metadata="$(find "$tmpdir/extracted" -type f -name metadata.json -print -quit)"
-
-    [[ -n "$metadata" ]] ||
-        die "GitHub archive for $uuid does not contain metadata.json."
-
-    extracted_uuid="$(
-        jq -er '.uuid // empty' "$metadata"
-    )"
-
-    [[ "$extracted_uuid" == "$uuid" ]] ||
-        die "UUID mismatch: expected '$uuid', downloaded '$extracted_uuid'."
-
-    install_extension_directory "$uuid" "$(dirname "$metadata")"
-
-    trap - RETURN
-    rm -rf "$tmpdir"
+install_dir() {
+  local uuid="$1" src="$2"
+  local meta="$src/metadata.json" dst="$INSTALL_DIR/$uuid" stage="$INSTALL_DIR/.$uuid.new"
+  [[ -f "$meta" ]] || die "Missing metadata.json for $uuid"
+  [[ "$(jq -er '.uuid' "$meta")" == "$uuid" ]] || die "UUID mismatch for $uuid"
+  supports_shell "$meta" || die "$uuid does not declare GNOME Shell $SHELL_VERSION support"
+  rm -rf "$stage"
+  mkdir -p "$stage"
+  cp -a "$src/." "$stage/"
+  rm -rf "$dst"
+  mv "$stage" "$dst"
+  log "Installed $uuid"
 }
 
-download_blur_my_shell() {
-    local uuid="$BLUR_UUID"
-    local tmpdir
-    local metadata
-    local extracted_uuid
-    local source_dir
-
-    log "Downloading $uuid from GitHub: https://github.com/aunetx/blur-my-shell"
-
-    tmpdir="$(mktemp -d)"
-    trap 'rm -rf "$tmpdir"' RETURN
-
-    curl --fail --silent --show-error --location \
-        "$BLUR_ZIP_URL" \
-        -o "$tmpdir/extension.zip"
-
-    unzip -q "$tmpdir/extension.zip" -d "$tmpdir/extracted"
-
-    metadata="$(find "$tmpdir/extracted" -type f -name metadata.json -print -quit)"
-    [[ -n "$metadata" ]] || die "GitHub archive for $uuid does not contain metadata.json."
-
-    extracted_uuid="$(jq -er '.uuid // empty' "$metadata")"
-    [[ "$extracted_uuid" == "$uuid" ]] || \
-        die "UUID mismatch: expected '$uuid', downloaded '$extracted_uuid'."
-
-    if ! jq -e --arg shell_version "$SHELL_VERSION" \
-        '.["shell-version"] | map(select(. == $shell_version)) | length > 0' \
-        "$metadata" >/dev/null; then
-        die "$uuid does not declare support for GNOME Shell $SHELL_VERSION."
-    fi
-
-    source_dir="$(dirname "$metadata")"
-    install_extension_directory "$uuid" "$source_dir"
-
-    trap - RETURN
-    rm -rf "$tmpdir"
+try_zip() {
+  local uuid="$1" zip="$2" tmp="$3" meta
+  rm -rf "$tmp/unzip"; mkdir -p "$tmp/unzip"
+  unzip -q "$zip" -d "$tmp/unzip" 2>/dev/null || return 1
+  meta="$(find_metadata "$tmp/unzip" "$uuid")" || return 1
+  supports_shell "$meta" || return 2
+  install_dir "$uuid" "$(dirname "$meta")"
 }
 
-install_extension_directory() {
-    local uuid="$1"
-    local source_dir="$2"
-    local destination="${INSTALL_DIR}/${uuid}"
-    local staging="${INSTALL_DIR}/.${uuid}.new"
+gh() {
+  curl -fsSL -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' "$1"
+}
 
-    [[ -f "${source_dir}/metadata.json" ]] ||
-        die "Missing metadata.json for $uuid."
+install_release_or_source() {
+  local uuid="$1" repo="$2" tmp rel name url rc branch meta
+  tmp="$(mktemp -d)"
+  log "Resolving $uuid from $repo"
 
-    # Validate metadata.json before installing it.
-    jq empty "${source_dir}/metadata.json" >/dev/null ||
-        die "Invalid metadata.json for $uuid."
+  if rel="$(gh "$GITHUB_API/repos/$repo/releases/latest" 2>/dev/null)"; then
+    log "Latest release: $(jq -r '.tag_name // "unknown"' <<<"$rel")"
+    while IFS=$'\t' read -r name url; do
+      [[ -n "$url" ]] || continue
+      log "Trying release ZIP: $name"
+      curl -fsSL "$url" -o "$tmp/a.zip" || continue
+      set +e; try_zip "$uuid" "$tmp/a.zip" "$tmp"; rc=$?; set -e
+      [[ $rc -eq 0 ]] && { rm -rf "$tmp"; return 0; }
+    done < <(jq -r '.assets[] | select(.name|ascii_downcase|endswith(".zip")) |
+                    [.name,.browser_download_url]|@tsv' <<<"$rel")
+  fi
 
-    rm -rf "$staging"
-    mkdir -p "$INSTALL_DIR"
+  branch="$(gh "$GITHUB_API/repos/$repo" | jq -er '.default_branch')"
+  log "No compatible release ZIP; inspecting $repo@$branch"
+  curl -fsSL "https://github.com/$repo/archive/refs/heads/$branch.zip" -o "$tmp/source.zip"
+  rm -rf "$tmp/source"; mkdir -p "$tmp/source"
+  unzip -q "$tmp/source.zip" -d "$tmp/source"
+  meta="$(find_metadata "$tmp/source" "$uuid" || true)"
+  if [[ -n "$meta" ]] && supports_shell "$meta"; then
+    install_dir "$uuid" "$(dirname "$meta")"
+    rm -rf "$tmp"; return 0
+  fi
 
-    # Copy into a staging directory so a failed build never leaves a
-    # partially installed extension behind.
-    cp -a "$source_dir/." "$staging/"
+  rm -rf "$tmp"
+  die "No directly installable GNOME-$SHELL_VERSION artifact found for $uuid in $repo"
+}
 
-    rm -rf "$destination"
-    mv "$staging" "$destination"
+install_branch_source() {
+  local uuid="$1" repo="$2" branch="$3" tmp meta
+  tmp="$(mktemp -d)"
+  log "Installing $uuid from $repo branch $branch"
+  git clone -q --depth=1 --branch "$branch" "https://github.com/$repo.git" "$tmp/repo"
+  meta="$(find_metadata "$tmp/repo" "$uuid")" || die "Could not locate $uuid in $repo/$branch"
+  install_dir "$uuid" "$(dirname "$meta")"
+  rm -rf "$tmp"
+}
 
-    log "Installed $uuid"
+install_asdb() {
+  local tmp rc
+  tmp="$(mktemp -d)"
+  log "Installing $ASDB_UUID"
+  curl -fsSL "$ASDB_ZIP_URL" -o "$tmp/a.zip"
+  set +e; try_zip "$ASDB_UUID" "$tmp/a.zip" "$tmp"; rc=$?; set -e
+  rm -rf "$tmp"
+  [[ $rc -eq 0 ]] || die "ASDB ZIP is missing, invalid, or incompatible with GNOME $SHELL_VERSION"
+}
+
+install_blur() {
+  local tmp meta
+  tmp="$(mktemp -d)"
+  log "Building $BLUR_UUID from current upstream master"
+  git clone -q --depth=1 "$BLUR_REPO" "$tmp/repo"
+  # Upstream source is already an extension tree; the image build compiles
+  # GSettings schemas globally afterwards. Validate before copying.
+  meta="$(find_metadata "$tmp/repo" "$BLUR_UUID")" || die "Blur My Shell metadata not found"
+  install_dir "$BLUR_UUID" "$(dirname "$meta")"
+  rm -rf "$tmp"
+}
+
+install_just_perfection() {
+  local tmp meta
+  tmp="$(mktemp -d)"
+  log "Building $JUST_UUID"
+  git clone -q --depth=1 "$JUST_REPO" "$tmp/repo"
+  (
+    cd "$tmp/repo"
+    ./scripts/build.sh
+  )
+  meta="$(find_metadata "$tmp/repo" "$JUST_UUID")" || die "Just Perfection build produced no extension"
+  install_dir "$JUST_UUID" "$(dirname "$meta")"
+  rm -rf "$tmp"
+}
+
+install_tailscale() {
+  local tmp meta
+  tmp="$(mktemp -d)"
+  log "Building $TAILSCALE_UUID"
+  git clone -q --depth=1 "$TAILSCALE_REPO" "$tmp/repo"
+  ( cd "$tmp/repo"; make build )
+  meta="$(find_metadata "$tmp/repo" "$TAILSCALE_UUID")" || die "Tailscale QS build produced no extension"
+  install_dir "$TAILSCALE_UUID" "$(dirname "$meta")"
+  rm -rf "$tmp"
+}
+
+install_night() {
+  local tmp stage meta
+  tmp="$(mktemp -d)"; stage="$tmp/stage"
+  log "Building $NIGHT_UUID with Meson"
+  git clone -q --depth=1 "$NIGHT_REPO" "$tmp/repo"
+  (
+    cd "$tmp/repo"
+    meson setup builddir --prefix=/usr
+    DESTDIR="$stage" meson install -C builddir
+  )
+  meta="$(find_metadata "$stage" "$NIGHT_UUID")" || die "Night Theme Switcher build produced no extension"
+  install_dir "$NIGHT_UUID" "$(dirname "$meta")"
+  rm -rf "$tmp"
+}
+
+install_lightning() {
+  local tmp meta
+  tmp="$(mktemp -d)"
+  log "Installing $LIGHTNING_UUID from canonical GitLab upstream"
+  git clone -q --depth=1 "$LIGHTNING_REPO" "$tmp/repo"
+  meta="$(find_metadata "$tmp/repo" "$LIGHTNING_UUID" || true)"
+  if [[ -n "$meta" ]]; then
+    install_dir "$LIGHTNING_UUID" "$(dirname "$meta")"
+  elif [[ -f "$tmp/repo/Makefile" ]]; then
+    ( cd "$tmp/repo"; make build )
+    meta="$(find_metadata "$tmp/repo" "$LIGHTNING_UUID")" ||
+      die "Lightning build completed but extension metadata was not found"
+    install_dir "$LIGHTNING_UUID" "$(dirname "$meta")"
+  else
+    die "Lightning upstream layout changed and no supported build entry point was found"
+  fi
+  rm -rf "$tmp"
+}
+
+verify_light_style() {
+  local meta="$INSTALL_DIR/$LIGHT_STYLE_UUID/metadata.json"
+  log "Checking base-image $LIGHT_STYLE_UUID"
+  [[ -f "$meta" ]] || die "$LIGHT_STYLE_UUID is missing from the Bluefin base image"
+  supports_shell "$meta" || die "Base-image $LIGHT_STYLE_UUID is not compatible with GNOME $SHELL_VERSION"
+  log "Keeping base-image $LIGHT_STYLE_UUID"
 }
 
 main() {
-    local shell_version
+  local e uuid repo branch
 
-    [[ $EUID -eq 0 ]] ||
-        die "This script must run as root during the image build."
+  [[ $EUID -eq 0 ]] || die "Run this during the image build as root"
 
-    require_command curl
-    require_command jq
-    require_command unzip
+  for c in curl jq unzip git make gettext meson glib-compile-schemas; do need "$c"; done
 
-    mkdir -p "$INSTALL_DIR"
+  SHELL_VERSION="$(get_shell_major_version)"
+  log "Detected GNOME Shell major version: $SHELL_VERSION"
+  mkdir -p "$INSTALL_DIR"
 
-    shell_version="$(get_shell_major_version)"
-    SHELL_VERSION="$shell_version"
-    log "Detected GNOME Shell major version: $shell_version"
-    log "Installing extensions into: $INSTALL_DIR"
+  for e in "${RELEASE_EXTENSIONS[@]}"; do
+    IFS='|' read -r uuid repo <<<"$e"
+    install_release_or_source "$uuid" "$repo"
+  done
 
-    for uuid in "${EGO_EXTENSIONS[@]}"; do
-        download_ego_extension "$uuid" "$shell_version"
-    done
+  for e in "${SOURCE_EXTENSIONS[@]}"; do
+    IFS='|' read -r uuid repo branch <<<"$e"
+    install_branch_source "$uuid" "$repo" "$branch"
+  done
 
-    download_blur_my_shell
-    download_github_extension "$ASDB_UUID" "$ASDB_ZIP_URL"
+  install_blur
+  install_just_perfection
+  install_tailscale
+  install_night
+  install_lightning
+  verify_light_style
+  install_asdb
 
-    log "All GNOME extensions installed successfully."
+  log "Verifying installed extension UUIDs..."
+  for e in "${RELEASE_EXTENSIONS[@]}" "${SOURCE_EXTENSIONS[@]}"; do
+    uuid="${e%%|*}"
+    [[ -f "$INSTALL_DIR/$uuid/metadata.json" ]] || die "Final verification failed: $uuid"
+  done
+  for uuid in "$BLUR_UUID" "$JUST_UUID" "$TAILSCALE_UUID" "$NIGHT_UUID" \
+              "$LIGHTNING_UUID" "$LIGHT_STYLE_UUID" "$ASDB_UUID"; do
+    [[ -f "$INSTALL_DIR/$uuid/metadata.json" ]] || die "Final verification failed: $uuid"
+  done
+
+  log "All GNOME extensions installed successfully."
 }
 
 main "$@"
