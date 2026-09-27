@@ -31,8 +31,10 @@ RELEASE_EXTENSIONS=(
     "hotedge@jonathan.jdoda.ca|jdoda/hotedge"
     "quick-settings-audio-panel@rayzeq.github.io|Rayzeq/quick-settings-audio-panel"
     "smile-extension@mijorus.it|mijorus/smile-gnome-extension"
-    "tilingshell@ferrarodomenico.com|domferr/tilingshell"
 )
+
+TILING_UUID="tilingshell@ferrarodomenico.com"
+TILING_REPO="domferr/tilingshell"
 
 ASDB_UUID="ASDB-Brightness-Keys@therivernix"
 ASDB_ZIP_URL="https://raw.githubusercontent.com/therivernix/ASDB-Brightness-Keys/main/ASDB-Brightness-Keys%40therivernix.zip"
@@ -133,6 +135,9 @@ install_dir() {
 
     [[ -f "$metadata" ]] ||
         die "Missing metadata.json for $uuid."
+
+    [[ -f "${source_dir}/extension.js" ]] ||
+        die "$uuid is missing extension.js; the selected source is not a built/installable GNOME extension."
 
     jq empty "$metadata" >/dev/null ||
         die "Invalid metadata.json for $uuid."
@@ -269,6 +274,84 @@ install_release_or_source() {
     die "No directly installable GNOME-$SHELL_VERSION artifact found for $uuid in $repo."
 }
 
+
+
+install_tilingshell() {
+    local tmpdir
+    local releases_json
+    local tag
+    local prerelease
+    local asset_name
+    local asset_url
+    local rc
+
+    tmpdir="$(mktemp -d)"
+
+    log "Resolving newest packaged $TILING_UUID release compatible with GNOME $SHELL_VERSION"
+
+    # GitHub's /releases/latest endpoint excludes prereleases. That is a
+    # problem for Tiling Shell on GNOME 50 because stable v17.3 targets
+    # GNOME 45-49, while the current v18 release candidate includes GNOME 50.
+    #
+    # Query the release list instead and validate each packaged ZIP using the
+    # same UUID + shell-version checks as every other extension.
+    releases_json="$(
+        github_api "${GITHUB_API}/repos/${TILING_REPO}/releases?per_page=20"
+    )"
+
+    while IFS=$'\t' read -r tag prerelease asset_name asset_url; do
+        [[ -n "$asset_url" ]] || continue
+
+        if [[ "$prerelease" == "true" ]]; then
+            log "Trying Tiling Shell prerelease $tag asset: $asset_name"
+        else
+            log "Trying Tiling Shell release $tag asset: $asset_name"
+        fi
+
+        curl --fail --silent --show-error --location \
+            "$asset_url" \
+            -o "$tmpdir/tilingshell.zip" ||
+            continue
+
+        set +e
+        try_zip "$TILING_UUID" "$tmpdir/tilingshell.zip" "$tmpdir"
+        rc=$?
+        set -e
+
+        case "$rc" in
+            0)
+                log "Selected Tiling Shell $tag for GNOME $SHELL_VERSION"
+                rm -rf "$tmpdir"
+                return 0
+                ;;
+            2)
+                log "Tiling Shell $tag / $asset_name is not compatible with GNOME $SHELL_VERSION"
+                ;;
+            *)
+                log "Tiling Shell $tag / $asset_name is not an installable extension ZIP"
+                ;;
+        esac
+    done < <(
+        jq -r '
+            .[]
+            | select(.draft == false)
+            | . as $release
+            | .assets[]
+            | select(.name | ascii_downcase | endswith(".zip"))
+            | [
+                $release.tag_name,
+                ($release.prerelease | tostring),
+                .name,
+                .browser_download_url
+              ]
+            | @tsv
+        ' <<<"$releases_json"
+    )
+
+    rm -rf "$tmpdir"
+
+    die "No packaged Tiling Shell release compatible with GNOME $SHELL_VERSION was found."
+}
 
 install_budslink() {
     local tmpdir
@@ -668,6 +751,7 @@ verify_final_install() {
     done
 
     for uuid in \
+        "$TILING_UUID" \
         "$BUDSLINK_UUID" \
         "$BLUR_UUID" \
         "$JUST_UUID" \
@@ -717,6 +801,7 @@ main() {
         install_release_or_source "$uuid" "$repo"
     done
 
+    install_tilingshell
     install_budslink
     install_blur
     install_just_perfection
