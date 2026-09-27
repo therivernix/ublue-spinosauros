@@ -27,7 +27,7 @@ cp -avf "/ctx/system_files"/. /
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # this installs a package from fedora repos
-dnf5 install -y firefox firefox-langpacks yelp
+dnf5 install -y firefox firefox-langpacks yelp curl jq unzip
 #gnome-software-rpm-ostree
 
 # Use a COPR Example:
@@ -36,6 +36,9 @@ dnf5 install -y firefox firefox-langpacks yelp
 # dnf5 -y install package
 # Disable COPRs so they don't end up enabled on the final image:
 # dnf5 -y copr disable ublue-os/staging
+
+# Installing Gnome Extensions
+/usr/share/ublue-os-spinosauros/scripts/gnome-extensions/install-gnome-extensions.sh
 
 # Compile GSettings schemas for GNOME extensions
 find /usr/share/gnome-shell/extensions -type d -name schemas \
