@@ -273,11 +273,13 @@ install_release_or_source() {
 
 install_budslink() {
     local tmpdir
-    local metadata
+    local zip
+    local rc
 
     tmpdir="$(mktemp -d)"
+    zip="${tmpdir}/repo/${BUDSLINK_UUID}.shell-extension.zip"
 
-    log "Installing $BUDSLINK_UUID from $BUDSLINK_BRANCH branch"
+    log "Building $BUDSLINK_UUID from $BUDSLINK_BRANCH branch"
 
     git clone -q \
         --depth=1 \
@@ -285,12 +287,43 @@ install_budslink() {
         "$BUDSLINK_REPO" \
         "$tmpdir/repo"
 
-    metadata="$(find_metadata "$tmpdir/repo" "$BUDSLINK_UUID")" ||
-        die "Could not find $BUDSLINK_UUID on BudsLink branch $BUDSLINK_BRANCH."
+    # Reproduce the canonical upstream install.sh packaging step, but do not
+    # run `gnome-extensions install` because this is an image build and there
+    # is no user GNOME session. Upstream's installer packs these directories:
+    # icons/, lib/, preferences/, ui/, plus translations from po/.
+    (
+        cd "$tmpdir/repo"
 
-    install_dir "$BUDSLINK_UUID" "$(dirname "$metadata")"
+        gnome-extensions pack ./ \
+            --extra-source=icons/ \
+            --extra-source=lib/ \
+            --extra-source=preferences/ \
+            --extra-source=ui/ \
+            --podir=po \
+            --force
+    )
+
+    [[ -f "$zip" ]] ||
+        die "BudsLink packaging did not produce $(basename "$zip")."
+
+    set +e
+    try_zip "$BUDSLINK_UUID" "$zip" "$tmpdir"
+    rc=$?
+    set -e
 
     rm -rf "$tmpdir"
+
+    case "$rc" in
+        0)
+            return 0
+            ;;
+        2)
+            die "$BUDSLINK_UUID does not declare GNOME Shell $SHELL_VERSION support."
+            ;;
+        *)
+            die "The packaged BudsLink extension does not contain the expected UUID $BUDSLINK_UUID."
+            ;;
+    esac
 }
 
 
@@ -671,7 +704,8 @@ main() {
         gettext \
         meson \
         glib-compile-schemas \
-        glib-compile-resources
+        glib-compile-resources \
+        gnome-extensions
     do
         need "$command_name"
     done
