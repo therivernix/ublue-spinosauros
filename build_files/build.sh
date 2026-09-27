@@ -27,7 +27,20 @@ cp -avf "/ctx/system_files"/. /
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # this installs a package from fedora repos
-dnf5 install -y firefox firefox-langpacks yelp curl jq unzip
+#dnf5 install -y firefox firefox-langpacks yelp curl jq unzip
+
+dnf5 install -y \
+    firefox \
+    firefox-langpacks \
+    yelp \
+    curl \
+    jq \
+    unzip \
+    git \
+    make \
+    gettext \
+    meson \
+    glib2-devel
 #gnome-software-rpm-ostree
 
 # Use a COPR Example:
