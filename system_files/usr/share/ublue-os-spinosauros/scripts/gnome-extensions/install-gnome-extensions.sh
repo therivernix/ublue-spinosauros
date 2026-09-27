@@ -12,8 +12,6 @@
 set -euo pipefail
 
 INSTALL_DIR="/usr/share/gnome-shell/extensions"
-EGO_API="https://extensions.gnome.org/extension-query/"
-
 # Extensions from extensions.gnome.org.
 EGO_EXTENSIONS=(
     "AlphabeticalAppGrid@stuarthayhurst"
@@ -72,30 +70,70 @@ get_shell_major_version() {
     printf '%s\n' "$version" | sed -E 's/^([0-9]+).*/\1/'
 }
 
-find_ego_extension() {
+urlencode() {
+    printf '%s' "$1" | jq -sRr @uri
+}
+
+get_latest_ego_version() {
     local uuid="$1"
     local shell_version="$2"
+    local encoded_uuid
+    local url
     local response
+    local results='[]'
+    local page_results
+    local next
 
-    response="$(
-        curl --fail --silent --show-error --location \
-            --get "$EGO_API" \
-            --data-urlencode "search=$uuid" \
-            --data-urlencode "shell_version=$shell_version"
-    )"
+    encoded_uuid="$(urlencode "$uuid")"
+    url="https://extensions.gnome.org/api/v1/extensions/${encoded_uuid}/versions/?page=1&page_size=100"
 
-    # Search results use uuid as the stable identifier. Pick the exact UUID.
-    jq -er --arg uuid "$uuid" '
-        .extensions[]
-        | select(.uuid == $uuid)
-        | .pk
-    ' <<<"$response" | head -n1
+    while [[ -n "$url" ]]; do
+        response="$(
+            curl --fail --silent --show-error --location \
+                -H 'Accept: application/json' \
+                "$url"
+        )"
+
+        page_results="$(jq -c '.results // []' <<<"$response")"
+        results="$(jq -cn \
+            --argjson old "$results" \
+            --argjson new "$page_results" \
+            '$old + $new'
+        )"
+
+        next="$(jq -r '.next // empty' <<<"$response")"
+        url="$next"
+    done
+
+    # EGO represents compatible Shell versions as major/minor/patch objects.
+    # -1 is a wildcard. Status 3 means the extension version is Active.
+    jq -er \
+        --argjson shell_major "$shell_version" \
+        '
+        def compatible:
+            any(
+                .shell_versions[];
+                (.major == -1 or .major == $shell_major)
+                and (.minor == -1)
+                and (.patch == -1)
+            );
+
+        [
+            .[]
+            | select(.status == 3)
+            | select(compatible)
+        ]
+        | sort_by(.pk)
+        | last
+        | .version
+        ' <<<"$results"
 }
 
 download_ego_extension() {
     local uuid="$1"
     local shell_version="$2"
-    local pk
+    local version
+    local encoded_uuid
     local zip
     local tmpdir
     local metadata
@@ -103,9 +141,13 @@ download_ego_extension() {
 
     log "Looking up $uuid for GNOME Shell $shell_version..."
 
-    pk="$(find_ego_extension "$uuid" "$shell_version")" || {
-        die "No compatible EGO release found for $uuid and GNOME Shell $shell_version."
+    version="$(get_latest_ego_version "$uuid" "$shell_version")" || {
+        die "No active EGO release found for $uuid compatible with GNOME Shell $shell_version."
     }
+
+    encoded_uuid="$(urlencode "$uuid")"
+
+    log "Downloading $uuid version $version..."
 
     tmpdir="$(mktemp -d)"
     trap 'rm -rf "$tmpdir"' RETURN
@@ -113,7 +155,8 @@ download_ego_extension() {
     zip="$tmpdir/extension.zip"
 
     curl --fail --silent --show-error --location \
-        "https://extensions.gnome.org/extension-download/?pk=$pk&shell_version=$shell_version" \
+        -H 'Accept: application/zip' \
+        "https://extensions.gnome.org/api/v1/extensions/${encoded_uuid}/versions/${version}/?format=zip" \
         -o "$zip"
 
     unzip -q "$zip" -d "$tmpdir/extracted"
@@ -123,9 +166,7 @@ download_ego_extension() {
     [[ -n "$metadata" ]] ||
         die "Downloaded archive for $uuid does not contain metadata.json."
 
-    extracted_uuid="$(
-        jq -er '.uuid // empty' "$metadata"
-    )"
+    extracted_uuid="$(jq -er '.uuid // empty' "$metadata")"
 
     [[ "$extracted_uuid" == "$uuid" ]] ||
         die "UUID mismatch: expected '$uuid', downloaded '$extracted_uuid'."
