@@ -273,11 +273,12 @@ install_release_or_source() {
 
 install_budslink() {
     local tmpdir
+    local install_script
+    local metadata
     local zip
     local rc
 
     tmpdir="$(mktemp -d)"
-    zip="${tmpdir}/repo/${BUDSLINK_UUID}.shell-extension.zip"
 
     log "Building $BUDSLINK_UUID from $BUDSLINK_BRANCH branch"
 
@@ -287,43 +288,127 @@ install_budslink() {
         "$BUDSLINK_REPO" \
         "$tmpdir/repo"
 
-    # Reproduce the canonical upstream install.sh packaging step, but do not
-    # run `gnome-extensions install` because this is an image build and there
-    # is no user GNOME session. Upstream's installer packs these directories:
-    # icons/, lib/, preferences/, ui/, plus translations from po/.
-    (
-        cd "$tmpdir/repo"
+    install_script="$(
+        find "$tmpdir/repo" -type f -name install.sh -print -quit
+    )"
 
-        gnome-extensions pack ./ \
-            --extra-source=icons/ \
-            --extra-source=lib/ \
-            --extra-source=preferences/ \
-            --extra-source=ui/ \
-            --podir=po \
-            --force
-    )
+    [[ -n "$install_script" ]] ||
+        die "BudsLink branch $BUDSLINK_BRANCH does not contain install.sh."
 
-    [[ -f "$zip" ]] ||
-        die "BudsLink packaging did not produce $(basename "$zip")."
+    mkdir -p \
+        "$tmpdir/home" \
+        "$tmpdir/data"
 
+    log "Running BudsLink upstream installer in an isolated temporary HOME"
+
+    # BudsLink Companion explicitly documents install.sh as its installation
+    # method. Run that installer in an isolated HOME/XDG_DATA_HOME so any
+    # `gnome-extensions install` operation writes only into our temporary
+    # build area rather than root's real home.
+    #
+    # stdin is /dev/null so an unexpected interactive prompt fails instead of
+    # hanging an OCI image build.
     set +e
-    try_zip "$BUDSLINK_UUID" "$zip" "$tmpdir"
+    (
+        cd "$(dirname "$install_script")"
+
+        HOME="$tmpdir/home" \
+        XDG_DATA_HOME="$tmpdir/data" \
+        bash "./$(basename "$install_script")" </dev/null
+    )
     rc=$?
     set -e
 
+    # First preference: harvest the extension installed by upstream's own
+    # installer from the isolated HOME/XDG data directory.
+    metadata="$(
+        find_metadata "$tmpdir/home" "$BUDSLINK_UUID" 2>/dev/null ||
+        find_metadata "$tmpdir/data" "$BUDSLINK_UUID" 2>/dev/null ||
+        true
+    )"
+
+    if [[ -n "$metadata" ]] && supports_shell "$metadata"; then
+        install_dir "$BUDSLINK_UUID" "$(dirname "$metadata")"
+        rm -rf "$tmpdir"
+        return 0
+    fi
+
+    # Second preference: upstream may only generate the shell-extension ZIP.
+    while IFS= read -r zip; do
+        log "Trying BudsLink build artifact: $(basename "$zip")"
+
+        set +e
+        try_zip "$BUDSLINK_UUID" "$zip" "$tmpdir"
+        rc=$?
+        set -e
+
+        if [[ $rc -eq 0 ]]; then
+            rm -rf "$tmpdir"
+            return 0
+        fi
+    done < <(
+        find "$tmpdir/repo" "$tmpdir/home" "$tmpdir/data" \
+            -type f \
+            \( -name '*.shell-extension.zip' -o -name '*.zip' \) \
+            -print 2>/dev/null
+    )
+
+    # Final fallback: discover the actual extension root rather than assuming
+    # it is the repository root. Some BudsLink revisions keep GNOME sources
+    # below a subdirectory.
+    while IFS= read -r extension_js; do
+        local extension_root
+        extension_root="$(dirname "$extension_js")"
+
+        [[ -f "$extension_root/metadata.json" ]] || continue
+        [[ "$(jq -r '.uuid // empty' "$extension_root/metadata.json" 2>/dev/null)" == "$BUDSLINK_UUID" ]] || continue
+
+        log "Discovered BudsLink extension root: ${extension_root#$tmpdir/repo/}"
+
+        local pack_args=()
+        local extra
+
+        # gnome-extensions pack automatically includes the standard extension
+        # files. Add common project directories only when they exist.
+        for extra in icons lib preferences ui schemas; do
+            if [[ -e "$extension_root/$extra" ]]; then
+                pack_args+=(--extra-source="$extra")
+            fi
+        done
+
+        if [[ -d "$extension_root/po" ]]; then
+            pack_args+=(--podir=po)
+        fi
+
+        (
+            cd "$extension_root"
+            gnome-extensions pack . \
+                "${pack_args[@]}" \
+                --force
+        )
+
+        zip="$extension_root/${BUDSLINK_UUID}.shell-extension.zip"
+
+        if [[ -f "$zip" ]]; then
+            set +e
+            try_zip "$BUDSLINK_UUID" "$zip" "$tmpdir"
+            rc=$?
+            set -e
+
+            if [[ $rc -eq 0 ]]; then
+                rm -rf "$tmpdir"
+                return 0
+            fi
+        fi
+    done < <(find "$tmpdir/repo" -type f -name extension.js -print)
+
     rm -rf "$tmpdir"
 
-    case "$rc" in
-        0)
-            return 0
-            ;;
-        2)
-            die "$BUDSLINK_UUID does not declare GNOME Shell $SHELL_VERSION support."
-            ;;
-        *)
-            die "The packaged BudsLink extension does not contain the expected UUID $BUDSLINK_UUID."
-            ;;
-    esac
+    if [[ $rc -ne 0 ]]; then
+        die "BudsLink upstream installer/build did not produce an installable $BUDSLINK_UUID extension."
+    fi
+
+    die "Could not locate a GNOME-$SHELL_VERSION BudsLink Companion extension after running upstream install.sh."
 }
 
 
@@ -738,3 +823,4 @@ main() {
 
 
 main "$@"
+
