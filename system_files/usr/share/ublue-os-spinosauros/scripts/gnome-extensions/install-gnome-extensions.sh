@@ -57,7 +57,6 @@ NIGHT_REPO="https://gitlab.com/rmnvgr/nightthemeswitcher-gnome-shell-extension.g
 LIGHTNING_UUID="lightning-gnome-launcher@avimanyu"
 LIGHTNING_REPO="https://gitlab.com/rimal.avimanyu/lightning-gnome-launcher-extension.git"
 
-LIGHT_STYLE_UUID="light-style@gnome-shell-extensions.gcampax.github.com"
 
 
 log() {
@@ -534,7 +533,14 @@ install_night() {
     done < <(
         git -C "$tmpdir/repo" tag --list |
             grep -E '^[vV]?[0-9]+([.][0-9]+)*$' |
-            sort -Vr
+            awk '{
+                original=$0
+                normalized=$0
+                sub(/^[vV]/, "", normalized)
+                print normalized "\t" original
+            }' |
+            sort -t $'\t' -k1,1Vr |
+            cut -f2-
     )
 
     rm -rf "$tmpdir"
@@ -614,20 +620,6 @@ install_lightning() {
 }
 
 
-verify_light_style() {
-    local metadata="${INSTALL_DIR}/${LIGHT_STYLE_UUID}/metadata.json"
-
-    log "Checking base-image $LIGHT_STYLE_UUID"
-
-    [[ -f "$metadata" ]] ||
-        die "$LIGHT_STYLE_UUID is missing from the Bluefin base image."
-
-    supports_shell "$metadata" ||
-        die "Base-image $LIGHT_STYLE_UUID is not compatible with GNOME $SHELL_VERSION."
-
-    log "Keeping base-image $LIGHT_STYLE_UUID"
-}
-
 
 install_asdb() {
     local tmpdir
@@ -682,7 +674,6 @@ verify_final_install() {
         "$TAILSCALE_UUID" \
         "$NIGHT_UUID" \
         "$LIGHTNING_UUID" \
-        "$LIGHT_STYLE_UUID" \
         "$ASDB_UUID"
     do
         [[ -f "${INSTALL_DIR}/${uuid}/metadata.json" ]] ||
@@ -732,7 +723,6 @@ main() {
     install_tailscale
     install_night
     install_lightning
-    verify_light_style
     install_asdb
 
     verify_final_install
@@ -742,4 +732,3 @@ main() {
 
 
 main "$@"
-
