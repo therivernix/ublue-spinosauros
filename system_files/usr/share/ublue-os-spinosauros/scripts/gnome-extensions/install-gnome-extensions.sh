@@ -25,13 +25,15 @@ RELEASE_EXTENSIONS=(
     "AlphabeticalAppGrid@stuarthayhurst|stuarthayhurst/alphabetical-grid-extension"
     "Studi-Brightness-Control@matey-0|matey-0/Studi-Brightness-Control"
     "clipboard-indicator@tudmotu.com|Tudmotu/gnome-shell-extension-clipboard-indicator"
-    "custom-command-list@storageb.github.com|StorageB/custom-command-menu"
     "disable-workspace-switch-animation@osmancevik|osmancevik/gnome-extension-disable-workspace-switch-animation"
     "hide-minimized@danigm.net|danigm/hide-minimized"
     "hotedge@jonathan.jdoda.ca|jdoda/hotedge"
     "quick-settings-audio-panel@rayzeq.github.io|Rayzeq/quick-settings-audio-panel"
     "smile-extension@mijorus.it|mijorus/smile-gnome-extension"
 )
+
+CUSTOM_COMMAND_UUID="custom-command-list@storageb.github.com"
+CUSTOM_COMMAND_REPO="StorageB/custom-command-menu"
 
 TILING_UUID="tilingshell@ferrarodomenico.com"
 TILING_REPO="domferr/tilingshell"
@@ -275,6 +277,102 @@ install_release_or_source() {
 }
 
 
+
+
+install_custom_command_menu() {
+    local tmpdir
+    local releases_json
+    local tag
+    local zipball_url
+    local metadata
+    local source_dir
+    local schema_name
+    local schema_file
+
+    tmpdir="$(mktemp -d)"
+
+    log "Resolving newest stable $CUSTOM_COMMAND_UUID release compatible with GNOME $SHELL_VERSION"
+
+    # Custom Command Menu publishes an installable release ZIP, but we install
+    # from the source snapshot of the same stable release tag instead.
+    #
+    # This avoids depending on the separately-packaged release asset while
+    # still following upstream stable releases automatically.
+    releases_json="$(
+        github_api "${GITHUB_API}/repos/${CUSTOM_COMMAND_REPO}/releases?per_page=20"
+    )"
+
+    while IFS=$'\t' read -r tag zipball_url; do
+        [[ -n "$tag" && -n "$zipball_url" ]] || continue
+
+        log "Trying Custom Command Menu stable release $tag"
+
+        rm -rf "$tmpdir/source"
+        mkdir -p "$tmpdir/source"
+
+        if ! curl --fail --silent --show-error --location \
+            "$zipball_url" \
+            -o "$tmpdir/custom-command-menu-source.zip"; then
+            warn "Could not download Custom Command Menu source for $tag"
+            continue
+        fi
+
+        if ! unzip -q "$tmpdir/custom-command-menu-source.zip" -d "$tmpdir/source"; then
+            warn "Could not extract Custom Command Menu source for $tag"
+            continue
+        fi
+
+        metadata="$(find_metadata "$tmpdir/source" "$CUSTOM_COMMAND_UUID" || true)"
+        [[ -n "$metadata" ]] || {
+            log "Custom Command Menu $tag does not contain the expected UUID"
+            continue
+        }
+
+        source_dir="$(dirname "$metadata")"
+
+        if ! supports_shell "$metadata"; then
+            log "Custom Command Menu $tag is not compatible with GNOME $SHELL_VERSION"
+            continue
+        fi
+
+        # Validate the project-specific files required by this extension.
+        for required_file in \
+            extension.js \
+            prefs.js \
+            commandsUI.js \
+            about.js
+        do
+            [[ -f "$source_dir/$required_file" ]] ||
+                die "Custom Command Menu $tag is missing required file: $required_file"
+        done
+
+        schema_name="$(jq -er '.["settings-schema"] // empty' "$metadata")"
+        [[ -n "$schema_name" ]] ||
+            die "Custom Command Menu $tag does not declare settings-schema in metadata.json"
+
+        schema_file="$source_dir/schemas/${schema_name}.gschema.xml"
+        [[ -f "$schema_file" ]] ||
+            die "Custom Command Menu $tag is missing its GSettings schema: $schema_file"
+
+        install_dir "$CUSTOM_COMMAND_UUID" "$source_dir"
+
+        log "Selected Custom Command Menu $tag for GNOME $SHELL_VERSION"
+
+        rm -rf "$tmpdir"
+        return 0
+    done < <(
+        jq -r '
+            .[]
+            | select(.draft == false and .prerelease == false)
+            | [.tag_name, .zipball_url]
+            | @tsv
+        ' <<<"$releases_json"
+    )
+
+    rm -rf "$tmpdir"
+
+    die "No stable Custom Command Menu release compatible with GNOME $SHELL_VERSION was found."
+}
 
 install_tilingshell() {
     local tmpdir
@@ -751,6 +849,7 @@ verify_final_install() {
     done
 
     for uuid in \
+        "$CUSTOM_COMMAND_UUID" \
         "$TILING_UUID" \
         "$BUDSLINK_UUID" \
         "$BLUR_UUID" \
@@ -801,6 +900,7 @@ main() {
         install_release_or_source "$uuid" "$repo"
     done
 
+    install_custom_command_menu
     install_tilingshell
     install_budslink
     install_blur
