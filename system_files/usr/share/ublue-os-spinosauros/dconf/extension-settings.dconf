@@ -12,6 +12,7 @@ hide-forcequit=true
 hide-icon-shadow=false
 hide-warehouse=true
 menu-button-extensions-app='com.mattjakeman.ExtensionManager.desktop'
+menu-button-icon-click-type=3
 menu-button-icon-image=4
 menu-button-icon-size=20
 menu-button-software-center='/usr/bin/flatpak run io.github.kolunmi.Bazaar'
@@ -53,12 +54,19 @@ icon-size=0
 legacy-tray-enabled=false
 tray-pos='right'
 
+[auto-move-windows]
+application-list=['com.fastmail.Fastmail.desktop:3']
+
 [blur-my-shell]
 rounded-blur-found=true
 settings-version=2
 
+[blur-my-shell/appfolder]
+brightness=0.59999999999999998
+sigma=30
+
 [blur-my-shell/applications]
-blur=true
+blur=false
 enable-all=true
 pipeline='pipeline_default'
 
@@ -67,9 +75,13 @@ pipeline='pipeline_default'
 
 [blur-my-shell/dash-to-dock]
 blur=true
+brightness=0.59999999999999998
+corner-radius=18
 override-background=true
 pipeline='pipeline_default_rounded'
+sigma=30
 static-blur=false
+style-dash-to-dock=0
 unblur-in-overview=false
 
 [blur-my-shell/lockscreen]
@@ -80,8 +92,11 @@ blur=true
 pipeline='pipeline_default'
 
 [blur-my-shell/panel]
+brightness=0.59999999999999998
+corner-radius=0
 force-light-text=true
 pipeline='pipeline_default'
+sigma=30
 static-blur=false
 
 [blur-my-shell/popup]
@@ -93,6 +108,10 @@ style-popup=3
 [blur-my-shell/screenshot]
 pipeline='pipeline_default'
 
+[blur-my-shell/window-list]
+brightness=0.59999999999999998
+sigma=30
+
 [bottom-dash-panel]
 accent-color=true
 auto-hide=false
@@ -103,7 +122,7 @@ toggle-panel=true
 
 [caffeine]
 cli-toggle=false
-indicator-position-max=1
+indicator-position-max=2
 user-enabled=true
 
 [clipboard-indicator]
@@ -114,48 +133,48 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['1password']
-next-history-clear=1789631408
+next-history-clear=1791006436
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
 toggle-menu=['<Super>v']
 
 [custom-command-list]
-command-order=[1, 2, 4, 5, 6, 7, 8, 9, 3, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 12, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+command-order=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 command1=('Activities Overview', 'dbus-send --session --dest=org.gnome.Shell --type=method_call /org/gnome/Shell org.freedesktop.DBus.Properties.Set string:org.gnome.Shell string:OverviewActive variant:boolean:true', 'focus-windows-symbolic', false)
 command10=('Trash', 'nautilus trash://', 'user-trash-symbolic', true)
 command11=('---', '', '', true)
-command12=('', '', '', true)
-command13=('', '', '', true)
-command14=('Settings', 'gnome-control-center', 'org.gnome.Settings-symbolic', true)
-command15=('About', 'gnome-control-center system about', 'help-about-symbolic', false)
-command16=('Appearance', 'gnome-control-center background', 'preferences-desktop-appearance-symbolic', false)
-command17=('Displays', 'gnome-control-center display', 'video-display-symbolic', false)
-command18=('Sound', 'gnome-control-center sound', 'audio-x-generic-symbolic', false)
-command19=('Keyboard', 'gnome-control-center keyboard', 'input-keyboard-symbolic', false)
+command12=('Settings', 'gnome-control-center', 'org.gnome.Settings-symbolic', true)
+command13=('About', 'gnome-control-center system about', 'help-about-symbolic', false)
+command14=('Appearance', 'gnome-control-center background', 'preferences-desktop-appearance-symbolic', false)
+command15=('Displays', 'gnome-control-center display', 'video-display-symbolic', false)
+command16=('Sound', 'gnome-control-center sound', 'audio-x-generic-symbolic', false)
+command17=('Keyboard', 'gnome-control-center keyboard', 'input-keyboard-symbolic', false)
+command18=('---', '', '', false)
+command19=('Configuration Scripts', 'xdg-terminal-exec -- ujust --choose', 'utilities-terminal-symbolic', false)
 command2=('---', '', '', false)
-command20=('---', '', '', false)
-command21=('Configuration Scripts', 'xdg-terminal-exec -- ujust --choose', 'utilities-terminal-symbolic', false)
-command22=('Extensions', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', true)
-command23=('---', '', '', true)
-command24=('Software Update', 'xdg-terminal-exec -- /usr/bin/ujust update', 'software-update-available-symbolic', true)
-command25=('Firmware Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-update-firmware', 'application-x-firmware-symbolic', true)
-command26=('Pin Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-rebase', 'view-pin-symbolic', true)
-command27=('Pause Updates', 'xdg-terminal-exec -- /usr/bin/ujust toggle-updates', 'media-playback-pause-symbolic', true)
-command28=('---', '', '', true)
-command29=('Toggle TPM Unlock', 'xdg-terminal-exec -- ujust toggle-tpm2', 'changes-prevent-symbolic', false)
-command3=('Downloads', 'nautilus ~/Downloads', 'folder-download-symbolic', true)
-command30=('Manage Passphrases', 'xdg-terminal-exec -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', false)
-command31=('---', '', '', true)
-command32=('Battery Controls', 'xdg-terminal-exec -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', false)
-command33=('Fan Controls', 'xdg-terminal-exec -- ujust spino-fancontrol', 'weather-windy-symbolic', false)
+command20=('Extensions', '/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=extension-manager --file-forwarding com.mattjakeman.ExtensionManager @@u %U @@', 'application-x-addon-symbolic', true)
+command21=('---', '', '', true)
+command22=('Software Update', 'xdg-terminal-exec -- /usr/bin/ujust update', 'software-update-available-symbolic', true)
+command23=('Firmware Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-update-firmware', 'application-x-firmware-symbolic', true)
+command24=('Pin Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-rebase', 'view-pin-symbolic', true)
+command25=('Pause Updates', 'xdg-terminal-exec -- /usr/bin/ujust toggle-updates', 'media-playback-pause-symbolic', true)
+command26=('---', '', '', true)
+command27=('Toggle TPM Unlock', 'xdg-terminal-exec -- ujust toggle-tpm2', 'changes-prevent-symbolic', false)
+command28=('Manage Passphrases', 'xdg-terminal-exec -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', false)
+command29=('---', '', '', true)
+command3=('Synology Drive', 'nautilus ~/SynologyDrive', 'folder-remote-symbolic', true)
+command30=('Battery Controls', 'xdg-terminal-exec -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', false)
+command31=('Fan Controls', 'xdg-terminal-exec -- ujust spino-fancontrol', 'weather-windy-symbolic', false)
+command32=('---', '', '', true)
+command33=('Reboot into UEFI', 'xdg-terminal-exec -- ujust spino-reboot-into-firmware', 'system-reboot-symbolic', true)
 command34=('---', '', '', true)
-command35=('Reboot into UEFI', 'ptyxis -- ujust spino-reboot-into-firmware', 'system-reboot-symbolic', true)
-command36=('---', '', '', true)
-command37=('Customize Menu', 'gnome-extensions prefs custom-command-list@storageb.github.com', 'document-edit-symbolic', true)
+command35=('Customize Menu', 'gnome-extensions prefs custom-command-list@storageb.github.com', 'document-edit-symbolic', true)
+command36=('', '', '', true)
+command37=('', '', '', true)
 command38=('', '', '', true)
 command39=('', '', '', true)
-command4=('Synology Drive', 'nautilus ~/SynologyDrive', 'folder-remote-symbolic', true)
+command4=('---', '', '', true)
 command40=('', '', '', true)
 command41=('', '', '', true)
 command42=('', '', '', true)
@@ -166,7 +185,7 @@ command46=('', '', '', true)
 command47=('', '', '', true)
 command48=('', '', '', true)
 command49=('', '', '', true)
-command5=('---', '', '', true)
+command5=('Home', 'nautilus', 'go-home-symbolic', true)
 command50=('', '', '', true)
 command51=('', '', '', true)
 command52=('', '', '', true)
@@ -177,7 +196,7 @@ command56=('', '', '', true)
 command57=('', '', '', true)
 command58=('', '', '', true)
 command59=('', '', '', true)
-command6=('Home', 'nautilus', 'go-home-symbolic', true)
+command6=('Recent', 'nautilus recent://', 'document-open-recent-symbolic', true)
 command60=('', '', '', true)
 command61=('', '', '', true)
 command62=('', '', '', true)
@@ -188,7 +207,7 @@ command66=('', '', '', true)
 command67=('', '', '', true)
 command68=('', '', '', true)
 command69=('', '', '', true)
-command7=('Recent', 'nautilus recent://', 'document-open-recent-symbolic', true)
+command7=('Starred', 'nautilus starred://', 'starred-symbolic', false)
 command70=('', '', '', true)
 command71=('', '', '', true)
 command72=('', '', '', true)
@@ -199,7 +218,7 @@ command76=('', '', '', true)
 command77=('', '', '', true)
 command78=('', '', '', true)
 command79=('', '', '', true)
-command8=('Starred', 'nautilus starred://', 'starred-symbolic', false)
+command8=('Network', 'nautilus network://', 'network-server-symbolic', false)
 command80=('', '', '', true)
 command81=('', '', '', true)
 command82=('', '', '', true)
@@ -210,7 +229,7 @@ command86=('', '', '', true)
 command87=('', '', '', true)
 command88=('', '', '', true)
 command89=('', '', '', true)
-command9=('Network', 'nautilus network://', 'network-server-symbolic', false)
+command9=('Downloads', 'nautilus ~/Downloads', 'folder-download-symbolic', true)
 command90=('', '', '', true)
 command91=('', '', '', true)
 command92=('', '', '', true)
@@ -245,7 +264,7 @@ togglestate2-setting=false
 
 [dash-to-dock]
 always-center-icons=true
-animation-time=0.15000000000000002
+animation-time=0.10000000000000002
 apply-custom-theme=false
 autohide=true
 autohide-in-fullscreen=true
@@ -255,7 +274,7 @@ click-action='focus-or-appspread'
 custom-background-color=false
 custom-theme-shrink=false
 customize-alphas=true
-dash-max-icon-size=32
+dash-max-icon-size=48
 disable-overview-on-startup=false
 dock-fixed=false
 dock-position='BOTTOM'
@@ -274,9 +293,9 @@ min-alpha=0.29999999999999999
 multi-monitor=true
 preferred-monitor=-2
 preferred-monitor-by-connector='eDP-1'
-pressure-threshold=50.0
+pressure-threshold=0.0
 preview-size-scale=0.14999999999999999
-require-pressure-to-show=false
+require-pressure-to-show=true
 running-indicator-style='DEFAULT'
 shift-click-action='minimize'
 shift-middle-click-action='launch'
@@ -285,7 +304,8 @@ shortcut-text=''
 shortcut-timeout=2.0
 show-apps-always-in-the-edge=true
 show-apps-at-top=false
-show-delay=0.10000000000000002
+show-delay=0.25
+show-dock-urgent-notify=true
 transparency-mode='DEFAULT'
 
 [dash-to-panel]
@@ -367,6 +387,14 @@ name='bluefin'
 window-maximized=false
 window-size=(640, 550)
 
+[hidetopbar]
+animation-time-autohide=0.10000000000000001
+animation-time-overview=0.40000000000000002
+enable-active-window=false
+enable-intellihide=false
+mouse-sensitive=false
+pressure-threshold=200
+
 [hotedge]
 edge-size=uint32 100
 fallback-in-use=false
@@ -377,35 +405,42 @@ show-animation=false
 accent-color-icon=false
 activities-button=true
 animation=1
+calendar=true
 clock-menu-position=0
 clock-menu-position-offset=0
 dash-app-running=false
+dash-icon-size=48
 events-button=false
+osd-position=0
 panel=true
 panel-in-overview=false
+panel-size=0
+quick-settings-backlight=true
 startup-status=1
 support-notifier-showed-version=36
 support-notifier-type=0
+switcher-popup-delay=true
 top-panel-position=0
 window-demands-attention-focus=true
 window-picker-icon=true
 window-preview-caption=false
 workspace=true
+world-clock=false
 
 [libpanel]
 alignment='right'
-layout=[['gnome@main', 'wack-lockscreen-clock@rinzler69-wastaken.github.com/main', 'quick-settings-audio-panel@rayzeq.github.io/main']]
+layout=[['gnome@main', 'quick-settings-audio-panel@rayzeq.github.io/main', 'wack-lockscreen-clock@rinzler69-wastaken.github.com/main']]
 single-column=false
 
 [lightning-launcher]
 shortcut-key=['<Super>space']
 
 [nightthemeswitcher/time]
-location=(51.040752648463673, 4.4832200000000002)
+location=(51.035299999999999, 4.4832200000000002)
 manual-schedule=false
 nightthemeswitcher-ondemand-keybinding=['<Shift><Super>t']
-sunrise=7.3152364811116755
-sunset=19.917825077805588
+sunrise=7.5895768697502604
+sunset=19.520268604543375
 
 [o-tiling]
 active-hint-overlay-enabled=false
@@ -434,7 +469,7 @@ create-perdevice-volume-sliders=false
 create-profile-switcher=false
 group-applications-volume-sliders=false
 master-volume-sliders-show-current-device=false
-merged-panel-position='top'
+merged-panel-position='bottom'
 move-input-volume-slider=true
 move-output-volume-slider=true
 mpris-controllers-are-moved=true
