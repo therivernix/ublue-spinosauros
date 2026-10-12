@@ -40,7 +40,9 @@ dnf5 install -y \
     make \
     gettext \
     meson \
-    glib2-devel
+    glib2-devel \
+    sassc
+    
 #gnome-software-rpm-ostree
 
 # Use a COPR Example:
@@ -56,6 +58,14 @@ dnf5 install -y \
 # Compile GSettings schemas for GNOME extensions
 find /usr/share/gnome-shell/extensions -type d -name schemas \
     -exec glib-compile-schemas {} \;
+
+### Reloading dconf to ingest settings and apply kb shortcuts
+# Compile dconf databases
+dconf update
+
+#Removing packages that are no longer needed after the build has completed
+dnf5 remove -y \
+    sassc
 
 #### Example for enabling a System Unit File
 
