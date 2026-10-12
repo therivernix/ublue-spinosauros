@@ -4,6 +4,7 @@
 #
 # Strategy:
 #   * Prefer ready-made upstream GitHub release ZIPs where available.
+#   * Fall back to a matching extensions.gnome.org ZIP for the installed Shell.
 #   * Fall back to a directly-installable current upstream source tree.
 #   * Use project-specific build/staging logic where the project requires it.
 #   * Validate UUID and GNOME Shell compatibility before installing.
@@ -60,6 +61,21 @@ NIGHT_REPO="https://gitlab.com/rmnvgr/nightthemeswitcher-gnome-shell-extension.g
 
 LIGHTNING_UUID="lightning-gnome-launcher@avimanyu"
 LIGHTNING_REPO="https://gitlab.com/rimal.avimanyu/lightning-gnome-launcher-extension.git"
+
+APPINDICATOR_UUID="appindicatorsupport@rgcjonas.gmail.com"
+APPINDICATOR_REPO="https://github.com/ubuntu/gnome-shell-extension-appindicator.git"
+
+BAZAAR_UUID="bazaar-integration@kolunmi.github.io"
+BAZAAR_REPO="https://github.com/bazaar-org/bazaar-companion.git"
+
+CAFFEINE_UUID="caffeine@patapon.info"
+CAFFEINE_REPO="https://github.com/eonpatapon/gnome-shell-extension-caffeine.git"
+
+DASH_UUID="dash-to-dock@micxgx.gmail.com"
+DASH_REPO="https://github.com/micheleg/dash-to-dock.git"
+
+GRADIA_UUID="gradia-integration@alexandervanhee.github.io"
+GRADIA_REPO="https://github.com/AlexanderVanhee/gradia-capture.git"
 
 
 
@@ -156,6 +172,12 @@ install_dir() {
     mkdir -p "$staging"
     cp -a "$source_dir/." "$staging/"
 
+    # Compile packaged schemas for system-wide use when provided by upstream.
+    if [[ -d "$staging/schemas" ]] &&
+       find "$staging/schemas" -maxdepth 1 -name '*.gschema.xml' -print -quit | grep -q .; then
+        glib-compile-schemas --strict "$staging/schemas"
+    fi
+
     rm -rf "$destination"
     mv "$staging" "$destination"
 
@@ -205,6 +227,57 @@ github_api() {
 }
 
 
+# Retrieve a prebuilt, shell-version-specific ZIP from extensions.gnome.org.
+# This is particularly important when upstream's latest GitHub release already
+# targets the next GNOME Shell version (e.g. QSAP v106 for GNOME 51).
+try_ego_release() {
+    local uuid="$1"
+    local tmpdir="$2"
+    local info download_url version zip_url rc
+
+    log "Checking extensions.gnome.org for $uuid on GNOME $SHELL_VERSION"
+
+    if ! info="$(curl --fail --silent --show-error --location --get \
+        --data-urlencode "uuid=$uuid" \
+        --data-urlencode "shell_version=$SHELL_VERSION" \
+        'https://extensions.gnome.org/extension-info/' 2>/dev/null)"; then
+        warn "Could not query extensions.gnome.org for $uuid"
+        return 1
+    fi
+
+    if ! download_url="$(jq -er '.download_url | select(type == "string" and length > 0)' <<<"$info" 2>/dev/null)"; then
+        log "No GNOME $SHELL_VERSION package listed on extensions.gnome.org for $uuid"
+        return 1
+    fi
+
+    version="$(jq -r '.version // "unknown"' <<<"$info")"
+
+    # Only trust ZIP download URLs on the official extensions.gnome.org host.
+    case "$download_url" in
+        /*) zip_url="https://extensions.gnome.org${download_url}" ;;
+        https://extensions.gnome.org/*) zip_url="$download_url" ;;
+        *) warn "Unexpected extension download URL for $uuid: $download_url"; return 1 ;;
+    esac
+
+    log "Trying extensions.gnome.org version $version for GNOME $SHELL_VERSION"
+    if ! curl --fail --silent --show-error --location \
+        "$zip_url" -o "$tmpdir/ego.zip"; then
+        warn "Could not download extensions.gnome.org version $version for $uuid"
+        return 1
+    fi
+
+    # try_zip checks UUID, installable payload, and GNOME Shell compatibility.
+    if try_zip "$uuid" "$tmpdir/ego.zip" "$tmpdir"; then
+        log "Selected extensions.gnome.org version $version for $uuid"
+        return 0
+    else
+        rc=$?
+        warn "extensions.gnome.org version $version for $uuid did not validate (code $rc)"
+        return 1
+    fi
+}
+
+
 install_release_or_source() {
     local uuid="$1"
     local repo="$2"
@@ -251,6 +324,13 @@ install_release_or_source() {
                 | @tsv
             ' <<<"$release_json"
         )
+    fi
+
+    # Prefer the GNOME-version-specific official package to an incompatible
+    # default-branch source checkout. No npm/TypeScript compilation is needed.
+    if try_ego_release "$uuid" "$tmpdir"; then
+        rm -rf "$tmpdir"
+        return 0
     fi
 
     branch="$(github_api "${GITHUB_API}/repos/${repo}" | jq -er '.default_branch')"
@@ -835,6 +915,111 @@ install_asdb() {
 }
 
 
+# Install a locally produced or upstream-provided GNOME extension ZIP.
+install_project_zip() {
+    local uuid="$1"
+    local repo_dir="$2"
+    local tmpdir="$3"
+    local zip
+    local rc
+
+    while IFS= read -r -d '' zip; do
+        log "Trying package for $uuid: $(basename "$zip")"
+        set +e
+        try_zip "$uuid" "$zip" "$tmpdir"
+        rc=$?
+        set -e
+        if [[ $rc -eq 0 ]]; then
+            return 0
+        fi
+    done < <(find "$repo_dir" -type f -name '*.zip' -print0)
+
+    return 1
+}
+
+install_appindicator() {
+    local tmpdir stage metadata
+    tmpdir="$(mktemp -d)"
+    stage="$tmpdir/stage"
+    log "Building $APPINDICATOR_UUID from upstream"
+    git clone -q --depth=1 "$APPINDICATOR_REPO" "$tmpdir/repo"
+    meson setup "$tmpdir/build" "$tmpdir/repo" --prefix=/usr
+    DESTDIR="$stage" meson install -C "$tmpdir/build"
+    metadata="$(find_metadata "$stage" "$APPINDICATOR_UUID")" ||
+        die "AppIndicator staging did not produce $APPINDICATOR_UUID."
+    install_dir "$APPINDICATOR_UUID" "$(dirname "$metadata")"
+    rm -rf "$tmpdir"
+}
+
+install_bazaar() {
+    local tmpdir metadata
+    tmpdir="$(mktemp -d)"
+    log "Building $BAZAAR_UUID from upstream"
+    git clone -q --depth=1 "$BAZAAR_REPO" "$tmpdir/repo"
+    (
+        cd "$tmpdir/repo"
+        bash ./build.sh
+    )
+    if ! install_project_zip "$BAZAAR_UUID" "$tmpdir/repo" "$tmpdir"; then
+        metadata="$(find_metadata "$tmpdir/repo" "$BAZAAR_UUID" || true)"
+        [[ -n "$metadata" ]] || die "Bazaar Companion did not produce an installable extension."
+        install_dir "$BAZAAR_UUID" "$(dirname "$metadata")"
+    fi
+    rm -rf "$tmpdir"
+}
+
+install_caffeine() {
+    local tmpdir metadata
+    tmpdir="$(mktemp -d)"
+    log "Building $CAFFEINE_UUID from upstream"
+    git clone -q --depth=1 "$CAFFEINE_REPO" "$tmpdir/repo"
+    (
+        cd "$tmpdir/repo"
+        make build
+    )
+    if ! install_project_zip "$CAFFEINE_UUID" "$tmpdir/repo" "$tmpdir"; then
+        metadata="$(find_metadata "$tmpdir/repo" "$CAFFEINE_UUID" || true)"
+        [[ -n "$metadata" ]] || die "Caffeine did not produce an installable extension."
+        install_dir "$CAFFEINE_UUID" "$(dirname "$metadata")"
+    fi
+    rm -rf "$tmpdir"
+}
+
+install_dash() {
+    local tmpdir metadata
+    tmpdir="$(mktemp -d)"
+    log "Building $DASH_UUID from upstream"
+    git clone -q --depth=1 "$DASH_REPO" "$tmpdir/repo"
+    (
+        cd "$tmpdir/repo"
+        make
+    )
+    if ! install_project_zip "$DASH_UUID" "$tmpdir/repo" "$tmpdir"; then
+        metadata="$(find_metadata "$tmpdir/repo" "$DASH_UUID" || true)"
+        [[ -n "$metadata" ]] || die "Dash to Dock did not produce an installable extension."
+        install_dir "$DASH_UUID" "$(dirname "$metadata")"
+    fi
+    rm -rf "$tmpdir"
+}
+
+install_gradia() {
+    local tmpdir metadata
+    tmpdir="$(mktemp -d)"
+    log "Building $GRADIA_UUID from upstream"
+    git clone -q --depth=1 "$GRADIA_REPO" "$tmpdir/repo"
+    (
+        cd "$tmpdir/repo"
+        bash ./build.sh
+    )
+    if ! install_project_zip "$GRADIA_UUID" "$tmpdir/repo" "$tmpdir"; then
+        metadata="$(find_metadata "$tmpdir/repo" "$GRADIA_UUID" || true)"
+        [[ -n "$metadata" ]] || die "Gradia Capture did not produce an installable extension."
+        install_dir "$GRADIA_UUID" "$(dirname "$metadata")"
+    fi
+    rm -rf "$tmpdir"
+}
+
+
 verify_final_install() {
     local entry
     local uuid
@@ -857,7 +1042,12 @@ verify_final_install() {
         "$TAILSCALE_UUID" \
         "$NIGHT_UUID" \
         "$LIGHTNING_UUID" \
-        "$ASDB_UUID"
+        "$ASDB_UUID" \
+        "$APPINDICATOR_UUID" \
+        "$BAZAAR_UUID" \
+        "$CAFFEINE_UUID" \
+        "$DASH_UUID" \
+        "$GRADIA_UUID"
     do
         [[ -f "${INSTALL_DIR}/${uuid}/metadata.json" ]] ||
             die "Final verification failed: $uuid is missing."
@@ -909,6 +1099,11 @@ main() {
     install_night
     install_lightning
     install_asdb
+    install_appindicator
+    install_bazaar
+    install_caffeine
+    install_dash
+    install_gradia
 
     verify_final_install
 
