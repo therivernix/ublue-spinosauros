@@ -234,53 +234,130 @@ github_api() {
 # Retrieve a prebuilt, shell-version-specific ZIP from extensions.gnome.org.
 # This is particularly important when upstream's latest GitHub release already
 # targets the next GNOME Shell version (e.g. QSAP v106 for GNOME 51).
+
+try_ego_version() {
+    local uuid="$1"
+    local version="$2"
+    local tmpdir="$3"
+    local sanitized_uuid
+    local zip_url
+    local metadata
+    local actual_version
+
+    sanitized_uuid="${uuid//@/}"
+    zip_url="https://extensions.gnome.org/extension-data/${sanitized_uuid}.v${version}.shell-extension.zip"
+
+    log "Trying exact extensions.gnome.org version $version for $uuid"
+
+    if ! curl --fail --silent --show-error --location \
+        "$zip_url" \
+        -o "$tmpdir/ego-exact.zip"; then
+        warn "Could not download exact EGO version $version for $uuid"
+        return 1
+    fi
+
+    rm -rf "$tmpdir/ego-exact-unzip"
+    mkdir -p "$tmpdir/ego-exact-unzip"
+
+    if ! unzip -q "$tmpdir/ego-exact.zip" -d "$tmpdir/ego-exact-unzip"; then
+        warn "Could not unpack exact EGO version $version for $uuid"
+        return 1
+    fi
+
+    metadata="$(find_metadata "$tmpdir/ego-exact-unzip" "$uuid" || true)"
+    [[ -n "$metadata" ]] || {
+        warn "Exact EGO version $version did not contain $uuid"
+        return 1
+    }
+
+    actual_version="$(jq -r '.version // empty' "$metadata")"
+
+    if [[ "$actual_version" != "$version" ]]; then
+        warn "Exact EGO version mismatch for $uuid: expected $version, found ${actual_version:-none}"
+        return 1
+    fi
+
+    supports_shell "$metadata" || {
+        warn "Exact EGO version $version for $uuid does not support GNOME $SHELL_VERSION"
+        return 1
+    }
+
+    install_dir "$uuid" "$(dirname "$metadata")"
+
+    log "Installed exact EGO version $version for $uuid"
+}
+
+
 try_ego_release() {
     local uuid="$1"
     local tmpdir="$2"
-    local info download_url version zip_url rc
+    local info
+    local version_tag
+    local version
+    local zip_url
+    local metadata
+    local actual_version
 
-    log "Checking extensions.gnome.org for $uuid on GNOME $SHELL_VERSION"
+    log "Checking extensions.gnome.org mapping for $uuid on GNOME $SHELL_VERSION"
 
     if ! info="$(curl --fail --silent --show-error --location --get \
         --data-urlencode "uuid=$uuid" \
-        --data-urlencode "shell_version=$SHELL_VERSION" \
         'https://extensions.gnome.org/extension-info/' 2>/dev/null)"; then
         warn "Could not query extensions.gnome.org for $uuid"
         return 1
     fi
 
-    if ! download_url="$(jq -er '.download_url | select(type == "string" and length > 0)' <<<"$info" 2>/dev/null)"; then
-        log "No GNOME $SHELL_VERSION package listed on extensions.gnome.org for $uuid"
+    # SweetTooth's authoritative mapping is shell_version_map.
+    # 'pk' is the exact version_tag that must be supplied to download-extension.
+    if ! version_tag="$(
+        jq -er --arg shell "$SHELL_VERSION" \
+            '.shell_version_map[$shell].pk // empty' <<<"$info"
+    )"; then
+        log "No extensions.gnome.org package mapped to GNOME $SHELL_VERSION for $uuid"
         return 1
     fi
 
-    version="$(jq -r '.version // "unknown"' <<<"$info")"
+    version="$(
+        jq -r --arg shell "$SHELL_VERSION" \
+            '.shell_version_map[$shell].version // "unknown"' <<<"$info"
+    )"
 
-    # Only trust ZIP download URLs on the official extensions.gnome.org host.
-    case "$download_url" in
-        /*) zip_url="https://extensions.gnome.org${download_url}" ;;
-        https://extensions.gnome.org/*) zip_url="$download_url" ;;
-        *) warn "Unexpected extension download URL for $uuid: $download_url"; return 1 ;;
-    esac
+    zip_url="https://extensions.gnome.org/download-extension/${uuid}.shell-extension.zip?version_tag=${version_tag}"
 
-    log "Trying extensions.gnome.org version $version for GNOME $SHELL_VERSION"
+    log "Trying EGO mapped version $version (version_tag=$version_tag) for GNOME $SHELL_VERSION"
+
     if ! curl --fail --silent --show-error --location \
-        "$zip_url" -o "$tmpdir/ego.zip"; then
-        warn "Could not download extensions.gnome.org version $version for $uuid"
+        "$zip_url" \
+        -o "$tmpdir/ego.zip"; then
+        warn "Could not download mapped EGO package for $uuid"
         return 1
     fi
 
-    # try_zip checks UUID, installable payload, and GNOME Shell compatibility.
-    if try_zip "$uuid" "$tmpdir/ego.zip" "$tmpdir"; then
-        log "Selected extensions.gnome.org version $version for $uuid"
-        return 0
-    else
-        rc=$?
-        warn "extensions.gnome.org version $version for $uuid did not validate (code $rc)"
+    rm -rf "$tmpdir/ego-check"
+    mkdir -p "$tmpdir/ego-check"
+
+    if ! unzip -q "$tmpdir/ego.zip" -d "$tmpdir/ego-check"; then
+        warn "Could not unpack mapped EGO package for $uuid"
         return 1
     fi
+
+    metadata="$(find_metadata "$tmpdir/ego-check" "$uuid" || true)"
+    [[ -n "$metadata" ]] || {
+        warn "Mapped EGO package did not contain $uuid"
+        return 1
+    }
+
+    actual_version="$(jq -r '.version // "unknown"' "$metadata")"
+
+    supports_shell "$metadata" || {
+        warn "Mapped EGO version $actual_version for $uuid does not support GNOME $SHELL_VERSION"
+        return 1
+    }
+
+    install_dir "$uuid" "$(dirname "$metadata")"
+
+    log "Selected EGO mapped version $actual_version for $uuid"
 }
-
 
 install_release_or_source() {
     local uuid="$1"
@@ -365,194 +442,67 @@ install_release_or_source() {
 
 
 
+
 install_workspace_animation() {
     local tmpdir
-    local releases_json
-    local tag
-    local prerelease
-    local asset_name
-    local asset_url
-    local rc
 
     tmpdir="$(mktemp -d)"
 
-    log "Resolving $WORKSPACE_ANIMATION_UUID specifically for GNOME $SHELL_VERSION"
+    log "Resolving $WORKSPACE_ANIMATION_UUID for GNOME $SHELL_VERSION"
 
-    # This extension can move ahead to the next GNOME major before the
-    # Spinosauros/Bluefin base image does.
+    # The manually-copied version that is known to work in Spinosauros on
+    # GNOME 50 was SweetTooth version 1. Use that exact reviewed package.
     #
-    # Current example:
-    #   EGO version 1 -> Active, GNOME 45-50
-    #   EGO version 2 -> GNOME 45-51, but not yet the reviewed GNOME-50 choice
-    #
-    # Therefore do not use the generic "latest GitHub/default branch" path.
-    # Prefer the reviewed shell-version-specific package selected by
-    # extensions.gnome.org for the Shell major installed in this image.
+    # Version 2 appeared later while GNOME 51 support was being added and is
+    # not needed on the GNOME 50 image.
+    if [[ "$SHELL_VERSION" == "50" ]]; then
+        if try_ego_version "$WORKSPACE_ANIMATION_UUID" "1" "$tmpdir"; then
+            rm -rf "$tmpdir"
+            return 0
+        fi
+
+        die "Known-good workspace-animation EGO version 1 could not be installed for GNOME 50."
+    fi
+
     if try_ego_release "$WORKSPACE_ANIMATION_UUID" "$tmpdir"; then
         rm -rf "$tmpdir"
         return 0
     fi
 
-    warn "Could not obtain $WORKSPACE_ANIMATION_UUID from extensions.gnome.org; scanning packaged GitHub releases"
-
-    # Fallback only to packaged GitHub releases. Deliberately do NOT fall back
-    # to the repository's default branch, because that can move ahead to a
-    # newer GNOME Shell version independently of the image.
-    releases_json="$(
-        github_api "${GITHUB_API}/repos/${WORKSPACE_ANIMATION_REPO}/releases?per_page=30"
-    )"
-
-    while IFS=$'\t' read -r tag prerelease asset_name asset_url; do
-        [[ -n "$asset_url" ]] || continue
-
-        if [[ "$prerelease" == "true" ]]; then
-            log "Trying workspace-animation prerelease $tag asset: $asset_name"
-        else
-            log "Trying workspace-animation release $tag asset: $asset_name"
-        fi
-
-        if ! curl --fail --silent --show-error --location \
-            "$asset_url" \
-            -o "$tmpdir/workspace-animation.zip"; then
-            continue
-        fi
-
-        set +e
-        try_zip \
-            "$WORKSPACE_ANIMATION_UUID" \
-            "$tmpdir/workspace-animation.zip" \
-            "$tmpdir"
-        rc=$?
-        set -e
-
-        case "$rc" in
-            0)
-                log "Selected workspace-animation $tag for GNOME $SHELL_VERSION"
-                rm -rf "$tmpdir"
-                return 0
-                ;;
-            2)
-                log "Workspace-animation $tag / $asset_name does not support GNOME $SHELL_VERSION"
-                ;;
-            *)
-                log "Workspace-animation $tag / $asset_name is not a valid installable extension ZIP"
-                ;;
-        esac
-    done < <(
-        jq -r '
-            .[]
-            | select(.draft == false)
-            | . as $release
-            | .assets[]
-            | select(.name | ascii_downcase | endswith(".zip"))
-            | [
-                $release.tag_name,
-                ($release.prerelease | tostring),
-                .name,
-                .browser_download_url
-              ]
-            | @tsv
-        ' <<<"$releases_json"
-    )
-
     rm -rf "$tmpdir"
-
-    die "No packaged Disable Workspace Switch Animation release compatible with GNOME $SHELL_VERSION was found."
+    die "No EGO workspace-animation package mapped to GNOME $SHELL_VERSION could be installed."
 }
 
 install_qsap() {
     local tmpdir
-    local releases_json
-    local tag
-    local prerelease
-    local asset_name
-    local asset_url
-    local rc
 
     tmpdir="$(mktemp -d)"
 
-    log "Resolving $QSAP_UUID specifically for GNOME $SHELL_VERSION"
+    log "Resolving $QSAP_UUID for GNOME $SHELL_VERSION"
 
-    # QSAP releases can move to the next GNOME major before the base image does.
-    # Example:
-    #   EGO v106 -> GNOME 51
-    #   EGO v105 -> GNOME 50
+    # The last manually-copied Spinosauros version that is known to work on
+    # GNOME 50 was the reviewed SweetTooth package version 103.
     #
-    # Therefore QSAP must NOT use the generic GitHub "latest release" path.
-    # First ask extensions.gnome.org for the package matching the Shell version
-    # installed in this image.
+    # Do not silently move GNOME 50 to newer QSAP packages: upstream is now
+    # actively developing GNOME 51 support and later uploads may regress on 50.
+    if [[ "$SHELL_VERSION" == "50" ]]; then
+        if try_ego_version "$QSAP_UUID" "103" "$tmpdir"; then
+            rm -rf "$tmpdir"
+            return 0
+        fi
+
+        die "Known-good QSAP EGO version 103 could not be installed for GNOME 50."
+    fi
+
+    # For later Shell versions, use SweetTooth's exact shell_version_map.
     if try_ego_release "$QSAP_UUID" "$tmpdir"; then
         rm -rf "$tmpdir"
         return 0
     fi
 
-    warn "Could not obtain $QSAP_UUID from extensions.gnome.org; scanning packaged GitHub releases"
-
-    # Fallback: inspect packaged GitHub releases newest-first, including
-    # prereleases. Only a ZIP that passes try_zip() is accepted.
-    #
-    # Deliberately do NOT fall back to the repository's default branch:
-    # QSAP's upstream repository is a TypeScript/build source tree and is not
-    # necessarily a directly installable extension.
-    releases_json="$(
-        github_api "${GITHUB_API}/repos/${QSAP_REPO}/releases?per_page=30"
-    )"
-
-    while IFS=$'\t' read -r tag prerelease asset_name asset_url; do
-        [[ -n "$asset_url" ]] || continue
-
-        if [[ "$prerelease" == "true" ]]; then
-            log "Trying QSAP prerelease $tag asset: $asset_name"
-        else
-            log "Trying QSAP release $tag asset: $asset_name"
-        fi
-
-        if ! curl --fail --silent --show-error --location \
-            "$asset_url" \
-            -o "$tmpdir/qsap.zip"; then
-            continue
-        fi
-
-        set +e
-        try_zip "$QSAP_UUID" "$tmpdir/qsap.zip" "$tmpdir"
-        rc=$?
-        set -e
-
-        case "$rc" in
-            0)
-                log "Selected QSAP $tag for GNOME $SHELL_VERSION"
-                rm -rf "$tmpdir"
-                return 0
-                ;;
-            2)
-                log "QSAP $tag / $asset_name does not support GNOME $SHELL_VERSION"
-                ;;
-            *)
-                log "QSAP $tag / $asset_name is not a valid installable QSAP ZIP"
-                ;;
-        esac
-    done < <(
-        jq -r '
-            .[]
-            | select(.draft == false)
-            | . as $release
-            | .assets[]
-            | select(.name | ascii_downcase | endswith(".zip"))
-            | [
-                $release.tag_name,
-                ($release.prerelease | tostring),
-                .name,
-                .browser_download_url
-              ]
-            | @tsv
-        ' <<<"$releases_json"
-    )
-
     rm -rf "$tmpdir"
-
-    die "No packaged QSAP release compatible with GNOME $SHELL_VERSION was found."
+    die "No EGO QSAP package mapped to GNOME $SHELL_VERSION could be installed."
 }
-
 install_custom_command_menu() {
     local tmpdir
     local releases_json
