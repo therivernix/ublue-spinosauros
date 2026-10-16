@@ -26,12 +26,16 @@ RELEASE_EXTENSIONS=(
     "AlphabeticalAppGrid@stuarthayhurst|stuarthayhurst/alphabetical-grid-extension"
     "Studi-Brightness-Control@matey-0|matey-0/Studi-Brightness-Control"
     "clipboard-indicator@tudmotu.com|Tudmotu/gnome-shell-extension-clipboard-indicator"
-    "disable-workspace-switch-animation@osmancevik|osmancevik/gnome-extension-disable-workspace-switch-animation"
     "hide-minimized@danigm.net|danigm/hide-minimized"
     "hotedge@jonathan.jdoda.ca|jdoda/hotedge"
-    "quick-settings-audio-panel@rayzeq.github.io|Rayzeq/quick-settings-audio-panel"
     "smile-extension@mijorus.it|mijorus/smile-gnome-extension"
 )
+
+WORKSPACE_ANIMATION_UUID="disable-workspace-switch-animation@osmancevik"
+WORKSPACE_ANIMATION_REPO="osmancevik/gnome-extension-disable-workspace-switch-animation"
+
+QSAP_UUID="quick-settings-audio-panel@rayzeq.github.io"
+QSAP_REPO="Rayzeq/quick-settings-audio-panel"
 
 CUSTOM_COMMAND_UUID="custom-command-list@storageb.github.com"
 CUSTOM_COMMAND_REPO="StorageB/custom-command-menu"
@@ -358,6 +362,196 @@ install_release_or_source() {
 
 
 
+
+
+
+install_workspace_animation() {
+    local tmpdir
+    local releases_json
+    local tag
+    local prerelease
+    local asset_name
+    local asset_url
+    local rc
+
+    tmpdir="$(mktemp -d)"
+
+    log "Resolving $WORKSPACE_ANIMATION_UUID specifically for GNOME $SHELL_VERSION"
+
+    # This extension can move ahead to the next GNOME major before the
+    # Spinosauros/Bluefin base image does.
+    #
+    # Current example:
+    #   EGO version 1 -> Active, GNOME 45-50
+    #   EGO version 2 -> GNOME 45-51, but not yet the reviewed GNOME-50 choice
+    #
+    # Therefore do not use the generic "latest GitHub/default branch" path.
+    # Prefer the reviewed shell-version-specific package selected by
+    # extensions.gnome.org for the Shell major installed in this image.
+    if try_ego_release "$WORKSPACE_ANIMATION_UUID" "$tmpdir"; then
+        rm -rf "$tmpdir"
+        return 0
+    fi
+
+    warn "Could not obtain $WORKSPACE_ANIMATION_UUID from extensions.gnome.org; scanning packaged GitHub releases"
+
+    # Fallback only to packaged GitHub releases. Deliberately do NOT fall back
+    # to the repository's default branch, because that can move ahead to a
+    # newer GNOME Shell version independently of the image.
+    releases_json="$(
+        github_api "${GITHUB_API}/repos/${WORKSPACE_ANIMATION_REPO}/releases?per_page=30"
+    )"
+
+    while IFS=$'\t' read -r tag prerelease asset_name asset_url; do
+        [[ -n "$asset_url" ]] || continue
+
+        if [[ "$prerelease" == "true" ]]; then
+            log "Trying workspace-animation prerelease $tag asset: $asset_name"
+        else
+            log "Trying workspace-animation release $tag asset: $asset_name"
+        fi
+
+        if ! curl --fail --silent --show-error --location \
+            "$asset_url" \
+            -o "$tmpdir/workspace-animation.zip"; then
+            continue
+        fi
+
+        set +e
+        try_zip \
+            "$WORKSPACE_ANIMATION_UUID" \
+            "$tmpdir/workspace-animation.zip" \
+            "$tmpdir"
+        rc=$?
+        set -e
+
+        case "$rc" in
+            0)
+                log "Selected workspace-animation $tag for GNOME $SHELL_VERSION"
+                rm -rf "$tmpdir"
+                return 0
+                ;;
+            2)
+                log "Workspace-animation $tag / $asset_name does not support GNOME $SHELL_VERSION"
+                ;;
+            *)
+                log "Workspace-animation $tag / $asset_name is not a valid installable extension ZIP"
+                ;;
+        esac
+    done < <(
+        jq -r '
+            .[]
+            | select(.draft == false)
+            | . as $release
+            | .assets[]
+            | select(.name | ascii_downcase | endswith(".zip"))
+            | [
+                $release.tag_name,
+                ($release.prerelease | tostring),
+                .name,
+                .browser_download_url
+              ]
+            | @tsv
+        ' <<<"$releases_json"
+    )
+
+    rm -rf "$tmpdir"
+
+    die "No packaged Disable Workspace Switch Animation release compatible with GNOME $SHELL_VERSION was found."
+}
+
+install_qsap() {
+    local tmpdir
+    local releases_json
+    local tag
+    local prerelease
+    local asset_name
+    local asset_url
+    local rc
+
+    tmpdir="$(mktemp -d)"
+
+    log "Resolving $QSAP_UUID specifically for GNOME $SHELL_VERSION"
+
+    # QSAP releases can move to the next GNOME major before the base image does.
+    # Example:
+    #   EGO v106 -> GNOME 51
+    #   EGO v105 -> GNOME 50
+    #
+    # Therefore QSAP must NOT use the generic GitHub "latest release" path.
+    # First ask extensions.gnome.org for the package matching the Shell version
+    # installed in this image.
+    if try_ego_release "$QSAP_UUID" "$tmpdir"; then
+        rm -rf "$tmpdir"
+        return 0
+    fi
+
+    warn "Could not obtain $QSAP_UUID from extensions.gnome.org; scanning packaged GitHub releases"
+
+    # Fallback: inspect packaged GitHub releases newest-first, including
+    # prereleases. Only a ZIP that passes try_zip() is accepted.
+    #
+    # Deliberately do NOT fall back to the repository's default branch:
+    # QSAP's upstream repository is a TypeScript/build source tree and is not
+    # necessarily a directly installable extension.
+    releases_json="$(
+        github_api "${GITHUB_API}/repos/${QSAP_REPO}/releases?per_page=30"
+    )"
+
+    while IFS=$'\t' read -r tag prerelease asset_name asset_url; do
+        [[ -n "$asset_url" ]] || continue
+
+        if [[ "$prerelease" == "true" ]]; then
+            log "Trying QSAP prerelease $tag asset: $asset_name"
+        else
+            log "Trying QSAP release $tag asset: $asset_name"
+        fi
+
+        if ! curl --fail --silent --show-error --location \
+            "$asset_url" \
+            -o "$tmpdir/qsap.zip"; then
+            continue
+        fi
+
+        set +e
+        try_zip "$QSAP_UUID" "$tmpdir/qsap.zip" "$tmpdir"
+        rc=$?
+        set -e
+
+        case "$rc" in
+            0)
+                log "Selected QSAP $tag for GNOME $SHELL_VERSION"
+                rm -rf "$tmpdir"
+                return 0
+                ;;
+            2)
+                log "QSAP $tag / $asset_name does not support GNOME $SHELL_VERSION"
+                ;;
+            *)
+                log "QSAP $tag / $asset_name is not a valid installable QSAP ZIP"
+                ;;
+        esac
+    done < <(
+        jq -r '
+            .[]
+            | select(.draft == false)
+            | . as $release
+            | .assets[]
+            | select(.name | ascii_downcase | endswith(".zip"))
+            | [
+                $release.tag_name,
+                ($release.prerelease | tostring),
+                .name,
+                .browser_download_url
+              ]
+            | @tsv
+        ' <<<"$releases_json"
+    )
+
+    rm -rf "$tmpdir"
+
+    die "No packaged QSAP release compatible with GNOME $SHELL_VERSION was found."
+}
 
 install_custom_command_menu() {
     local tmpdir
@@ -1034,6 +1228,8 @@ verify_final_install() {
     done
 
     for uuid in \
+        "$WORKSPACE_ANIMATION_UUID" \
+        "$QSAP_UUID" \
         "$CUSTOM_COMMAND_UUID" \
         "$TILING_UUID" \
         "$BUDSLINK_UUID" \
@@ -1090,6 +1286,8 @@ main() {
         install_release_or_source "$uuid" "$repo"
     done
 
+    install_workspace_animation
+    install_qsap
     install_custom_command_menu
     install_tilingshell
     install_budslink
