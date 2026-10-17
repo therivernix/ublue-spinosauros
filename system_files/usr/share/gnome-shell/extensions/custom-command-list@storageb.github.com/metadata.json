@@ -1,0 +1,21 @@
+{
+  "description": "Create a custom menu in the GNOME top bar to run your favorite commands. Add entries to launch apps, execute shell commands, run scripts, and more through a simple, intuitive interface.",
+  "donations": {
+    "buymeacoffee": "StorageB"
+  },
+  "name": "Custom Command Menu",
+  "settings-schema": "org.gnome.shell.extensions.custom-command-list",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51"
+  ],
+  "url": "https://github.com/StorageB/custom-command-menu",
+  "uuid": "custom-command-list@storageb.github.com",
+  "gettext-domain": "custom-command-list",
+  "version": 16
+}

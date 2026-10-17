@@ -53,7 +53,7 @@ dnf5 install -y \
 # dnf5 -y copr disable ublue-os/staging
 
 # Installing Gnome Extensions
-/usr/share/ublue-os-spinosauros/scripts/gnome-extensions/install-gnome-extensions.sh
+# /usr/share/ublue-os-spinosauros/scripts/gnome-extensions/install-gnome-extensions.sh
 
 # Compile GSettings schemas for GNOME extensions
 find /usr/share/gnome-shell/extensions -type d -name schemas \

@@ -1,0 +1,12 @@
+{
+  "name": "Night Theme Switcher",
+  "description": "Automatically toggle your desktop’s color scheme between light and dark, switch backgrounds and run custom commands at sunset and sunrise.",
+  "uuid": "nightthemeswitcher@romainvigier.fr",
+  "gettext-domain": "nightthemeswitcher@romainvigier.fr",
+  "settings-schema": "org.gnome.shell.extensions.nightthemeswitcher",
+  "url": "https://nightthemeswitcher.romainvigier.fr",
+  "session-modes": ["unlock-dialog", "user"],
+  "shell-version": ["50"],
+  "version": 83,
+  "build-type": "debug"
+}
