@@ -20,6 +20,8 @@ rm -rf /usr/share/gnome-shell/extensions/*
 # Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
 
+rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
+
 ### Install packages
 
 # Packages can be installed from any enabled yum repo on the image.
