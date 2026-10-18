@@ -26,8 +26,14 @@ cp -avf "/ctx/system_files"/. /
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-# this installs a package from fedora repos
-#dnf5 install -y firefox firefox-langpacks yelp curl jq unzip
+# Use a COPR Example:
+#
+# dnf5 -y copr enable ublue-os/staging
+# dnf5 -y install package
+# Disable COPRs so they don't end up enabled on the final image:
+# dnf5 -y copr disable ublue-os/staging
+# Install GNOME Rounded Blur
+dnf5 -y copr enable ublue-os/packages
 
 dnf5 install -y \
     firefox \
@@ -41,16 +47,11 @@ dnf5 install -y \
     gettext \
     meson \
     glib2-devel \
-    sassc
-    
-#gnome-software-rpm-ostree
+    sassc \
+    xdg-terminal-exec \
+    gnome-rounded-blur
 
-# Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
+dnf5 -y copr disable ublue-os/packages
 
 # Installing Gnome Extensions
 # /usr/share/ublue-os-spinosauros/scripts/gnome-extensions/install-gnome-extensions.sh
