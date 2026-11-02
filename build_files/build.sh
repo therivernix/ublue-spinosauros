@@ -3,24 +3,13 @@
 set -ouex pipefail
 
 #Removing bluefin keybindings so I can override them
-rm -f /etc/dconf/db/distro.d/02-bluefin-keybindings
+# rm -f /etc/dconf/db/distro.d/02-bluefin-keybindings
 
 # Removing built-in extensions
-#rm -rf /usr/share/gnome-shell/extensions/search-light@icedman.github.com
-#rm -rf /usr/share/gnome-shell/extensions/apps-menu@gnome-shell-extensions.gcampax.github.com
-#rm -rf /usr/share/gnome-shell/extensions/launch-new-instance@gnome-shell-extensions.gcampax.github.com
-#rm -rf /usr/share/gnome-shell/extensions/places-menu@gnome-shell-extensions.gcampax.github.com
-#rm -rf /usr/share/gnome-shell/extensions/window-list@gnome-shell-extensions.gcampax.github.com
-#rm -rf /usr/share/gnome-shell/extensions/logomenu@aryan_k
-#rm -rf /usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github
-#rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
-#rm -rf /usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 rm -rf /usr/share/gnome-shell/extensions/*
 
 # Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
-
-rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 
 ### Install packages
 
@@ -30,13 +19,9 @@ rm -rf /usr/share/gnome-shell/extensions/blur-my-shell@aunetx
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 # Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
-# Install GNOME Rounded Blur
-dnf5 -y copr enable ublue-os/packages
+
+# Enable COPRs to packages from said COPR can be installed during build time
+#dnf5 -y copr enable ublue-os/packages
 
 dnf5 install -y \
     firefox \
@@ -52,20 +37,23 @@ dnf5 install -y \
     glib2-devel \
     sassc \
     xdg-terminal-exec \
-    gnome-rounded-blur
 
-dnf5 -y copr disable ublue-os/packages
 
-# Installing Gnome Extensions
-# /usr/share/ublue-os-spinosauros/scripts/gnome-extensions/install-gnome-extensions.sh
+### Extensions
 
 # Compile GSettings schemas for GNOME extensions
 find /usr/share/gnome-shell/extensions -type d -name schemas \
     -exec glib-compile-schemas {} \;
 
-### Reloading dconf to ingest settings and apply kb shortcuts
+
+### Gnome Dconf
+
+# Reloading dconf to ingest settings and apply kb shortcuts
 # Compile dconf databases
 dconf update
+
+
+### Cleaning Up
 
 #Removing packages that are no longer needed after the build has completed
 dnf5 remove -y \
@@ -74,6 +62,15 @@ dnf5 remove -y \
     htop \
     nvtop \
     sassc
-#### Example for enabling a System Unit File
 
+# Disable COPRs so they don't end up enabled on the final image:
+#dnf5 -y copr disable ublue-os/packages
+
+
+
+#### Example for enabling a System Unit File
 systemctl enable podman.socket
+
+
+
+
