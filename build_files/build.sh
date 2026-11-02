@@ -37,6 +37,7 @@ dnf5 install -y \
     glib2-devel \
     sassc \
     xdg-terminal-exec \
+    gum
 
 
 ### Extensions
