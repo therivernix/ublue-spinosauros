@@ -23,6 +23,22 @@ cp -avf "/ctx/system_files"/. /
 # Enable COPRs to packages from said COPR can be installed during build time
 #dnf5 -y copr enable ublue-os/packages
 
+### Adding 1Password Signing Key
+rpm --import https://downloads.1password.com/linux/keys/1password.asc
+
+### Add the official 1Password repository
+cat > /etc/yum.repos.d/1password.repo <<'EOF'
+[1password]
+name=1Password Stable Channel
+baseurl=https://downloads.1password.com/linux/rpm/stable/$basearch
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://downloads.1password.com/linux/keys/1password.asc
+EOF
+
+
+
 dnf5 install -y \
     firefox \
     firefox-langpacks \
@@ -37,7 +53,8 @@ dnf5 install -y \
     glib2-devel \
     sassc \
     xdg-terminal-exec \
-    gum
+    gum \
+    1password
 
 
 ### Extensions
