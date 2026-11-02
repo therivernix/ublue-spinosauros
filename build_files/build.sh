@@ -23,21 +23,6 @@ cp -avf "/ctx/system_files"/. /
 # Enable COPRs to packages from said COPR can be installed during build time
 #dnf5 -y copr enable ublue-os/packages
 
-### Adding 1Password Signing Key
-rpm --import https://downloads.1password.com/linux/keys/1password.asc
-
-### Add the official 1Password repository
-cat > /etc/yum.repos.d/1password.repo <<'EOF'
-[1password]
-name=1Password Stable Channel
-baseurl=https://downloads.1password.com/linux/rpm/stable/$basearch
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://downloads.1password.com/linux/keys/1password.asc
-EOF
-
-
 
 dnf5 install -y \
     firefox \
@@ -54,7 +39,14 @@ dnf5 install -y \
     sassc \
     xdg-terminal-exec \
     gum \
-    1password
+    dnf5-plugins
+
+# Add the official Tailscale repository
+dnf5 config-manager addrepo --overwrite \
+    --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+
+# Install Tailscale
+dnf5 install -y tailscale
 
 
 ### Extensions
@@ -88,6 +80,9 @@ dnf5 remove -y \
 
 #### Example for enabling a System Unit File
 systemctl enable podman.socket
+
+# Enable the daemon for boot
+systemctl enable tailscaled.service
 
 
 
