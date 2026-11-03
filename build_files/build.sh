@@ -67,12 +67,12 @@ dconf update
 ### Cleaning Up
 
 #Removing packages that are no longer needed after the build has completed
-dnf5 remove -y \
+dnf5 remove -y --no-autoremove \
     gnome-software \
     gnome-extensions-app \
     htop \
     nvtop \
-    sassc \
+    sassc
     #make \
     #gettext \
     #meson \
