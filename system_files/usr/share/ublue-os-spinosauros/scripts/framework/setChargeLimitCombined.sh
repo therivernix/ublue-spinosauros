@@ -12,6 +12,9 @@ NC='\033[0m' # No Color
 echo -e "${CYAN}${BOLD}🔋 Battery Configuration Tool${NC}"
 echo "----------------------------------------"
 
+echo -e "${CYAN}${BOLD}🌬️  REQUIRES FRAMEWORK TOOL -- Install with UJUST${NC}"
+echo "----------------------------------------"
+
 # Charge limit selection
 echo -e "${YELLOW}Select charge limit:${NC}"
 echo -e "  ${BLUE}1)${NC} 80%"

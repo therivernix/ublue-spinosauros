@@ -15,6 +15,9 @@ NC='\033[0m' # No Color
 echo -e "${CYAN}${BOLD}🌬️  Fan & Thermal Control Tool${NC}"
 echo "----------------------------------------"
 
+echo -e "${CYAN}${BOLD}🌬️  REQUIRES FRAMEWORK TOOL -- Install with UJUST${NC}"
+echo "----------------------------------------"
+
 # Always show thermal status at start
 echo -e "${CYAN}🌡️ Current Thermal Status (startup)${NC}"
 echo "----------------------------------------"
