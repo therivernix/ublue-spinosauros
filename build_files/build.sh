@@ -73,10 +73,10 @@ dnf5 remove -y \
     htop \
     nvtop \
     sassc \
-    make \
-    gettext \
-    meson \
-    glib2-devel \
+    #make \
+    #gettext \
+    #meson \
+    #glib2-devel \
     
 dnf5 clean all
 
