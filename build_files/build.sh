@@ -39,7 +39,8 @@ dnf5 install -y \
     sassc \
     xdg-terminal-exec \
     gum \
-    dnf5-plugins
+    dnf5-plugins \
+    chromium
 
 # Add the official Tailscale repository
 dnf5 config-manager addrepo --overwrite \
@@ -71,12 +72,22 @@ dnf5 remove -y \
     gnome-extensions-app \
     htop \
     nvtop \
-    sassc
+    sassc \
+    make \
+    gettext \
+    meson \
+    glib2-devel \
+    
+dnf5 clean all
 
 # Disable COPRs so they don't end up enabled on the final image:
 #dnf5 -y copr disable ublue-os/packages
 
-
+# Disable third-party repositories in the final image
+dnf5 config-manager disable \
+    'copr:copr.fedorainfracloud.org:ublue-os:akmods' \
+    fedora-multimedia \
+    tailscale-stable
 
 #### Example for enabling a System Unit File
 systemctl enable podman.socket
