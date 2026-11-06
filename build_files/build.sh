@@ -40,19 +40,14 @@ dnf5 install -y \
     xdg-terminal-exec \
     gum \
     dnf5-plugins \
-    fedora-workstation-repositories
+    chromium
 
-# Add repositories
-### Tailscale
+# Add the official Tailscale repository
 dnf5 config-manager addrepo --overwrite \
     --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 
-### Chrome
-dnf5 config-manager setopt google-chrome.enabled=1
-
-# Install from repos
-dnf5 install -y tailscale google-chrome-stable
-
+# Install Tailscale
+dnf5 install -y tailscale
 
 
 ### Extensions
@@ -93,8 +88,6 @@ dnf5 config-manager disable \
     'copr:copr.fedorainfracloud.org:ublue-os:akmods' \
     fedora-multimedia \
     tailscale-stable
-
-dnf5 config-manager setopt google-chrome.enabled=0
 
 #### Example for enabling a System Unit File
 systemctl enable podman.socket
