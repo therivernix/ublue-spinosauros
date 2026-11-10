@@ -35,7 +35,7 @@ hot-edge-mode=1
 hot-edge-position=1
 show-dash=1
 super-double-press-action=3
-super-key-mode=3
+super-key-mode=1
 switcher-popup-theme=3
 switcher-popup-up-down-action=4
 switcher-ws-thumbnails=1
@@ -133,7 +133,7 @@ clear-on-boot=true
 disable-down-arrow=true
 display-mode=0
 excluded-apps=['com.onepassword.OnePassword']
-next-history-clear=1793698764
+next-history-clear=1794387532
 open-at-cursor=true
 paste-on-select=true
 strip-text=true
@@ -160,12 +160,12 @@ command23=('Firmware Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-update-
 command24=('Pin Software Update', 'xdg-terminal-exec -- /usr/bin/ujust spino-rebase', 'view-pin-symbolic', true)
 command25=('', '', '', true)
 command26=('---', '', '', true)
-command27=('Toggle TPM Unlock', 'xdg-terminal-exec -- ujust spino-manage-tpm2-autounlock', 'changes-prevent-symbolic', true)
-command28=('Manage Passphrases', 'xdg-terminal-exec -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', true)
+command27=('Toggle TPM Unlock', 'xdg-terminal-exec -- ujust spino-manage-tpm2-autounlock', 'changes-prevent-symbolic', false)
+command28=('Manage Passphrases', 'xdg-terminal-exec -- ujust spino-manage-luks-passphrases', 'dialog-password-symbolic', false)
 command29=('---', '', '', true)
 command3=('Synology Drive', 'nautilus ~/SynologyDrive', 'folder-remote-symbolic', true)
-command30=('Battery Controls', 'xdg-terminal-exec -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', true)
-command31=('Fan Controls', 'xdg-terminal-exec -- ujust spino-fancontrol', 'weather-windy-symbolic', true)
+command30=('Battery Controls', 'xdg-terminal-exec -- ujust spino-battery-management', 'battery-level-100-charged-symbolic', false)
+command31=('Fan Controls', 'xdg-terminal-exec -- ujust spino-fancontrol', 'weather-windy-symbolic', false)
 command32=('---', '', '', true)
 command33=('Reboot into UEFI', 'xdg-terminal-exec -- ujust spino-reboot-into-firmware', 'system-reboot-symbolic', true)
 command34=('---', '', '', true)
@@ -429,7 +429,7 @@ world-clock=false
 
 [libpanel]
 alignment='right'
-layout=[['gnome@main', 'quick-settings-audio-panel@rayzeq.github.io/main', 'wack-lockscreen-clock@rinzler69-wastaken.github.com/main']]
+layout={'gnome-shell/main:primary': ('primary', 0, 0), 'quick-settings-audio-panel@rayzeq.github.io/main': ('primary', 0, 1)}
 single-column=false
 
 [lightning-launcher]
@@ -479,6 +479,14 @@ profiles-renames={'Radeon High Definition Audio Controller': {'off': ('Off', 'Of
 remove-output-volume-slider=false
 version=2
 widgets-order=['profile-switcher', 'mpris-controllers', 'output-volume-slider', 'perdevice-volume-sliders', 'input-volume-slider', 'balance-slider', 'applications-volume-sliders']
+
+[quicksettings-audio-devices-hider]
+available-input-names=['Headset Mono Microphone – Ryzen HD Audio Controller', 'Digital Microphone – Ryzen HD Audio Controller', 'Internal Stereo Microphone – Ryzen HD Audio Controller']
+available-output-names=['Speaker – Ryzen HD Audio Controller', 'Apple TV Upstairs Living Room', 'Apple TV Downstairs', 'MacBook Air']
+
+[quicksettings-audio-devices-renamer]
+input-names-map={'Headset Mono Microphone – Ryzen HD Audio Controller': 'Headset Mono Microphone – Ryzen HD Audio Controller', 'Digital Microphone – Ryzen HD Audio Controller': 'Digital Microphone – Ryzen HD Audio Controller', 'Internal Stereo Microphone – Ryzen HD Audio Controller': 'Internal Stereo Microphone – Ryzen HD Audio Controller'}
+output-names-map={'Speaker – Ryzen HD Audio Controller': 'Laptop Speakers', 'Apple TV Downstairs': 'Apple TV Downstairs', 'Apple TV Upstairs Living Room': 'Apple TV Upstairs Living Room', 'MacBook Air': 'MacBook Air'}
 
 [restartto]
 blacklist=['Fedora', 'EFI USB Device', 'EFI Network', 'EFI DVD/CDROM']

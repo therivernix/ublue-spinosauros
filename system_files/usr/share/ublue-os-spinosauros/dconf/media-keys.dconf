@@ -1,6 +1,6 @@
 [/]
 control-center=['AudioMedia']
-custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom7/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom8/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom9/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom11/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom12/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom13/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom14/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom15/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom5/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom6/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom7/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom8/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom9/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom11/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom12/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom13/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom14/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom15/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom10/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom16/']
 media-static=['gnome-control-center']
 
 [custom-keybindings/custom0]
@@ -12,6 +12,11 @@ name='Terminal'
 binding='<Shift><Super>p'
 command='firefox --private-window'
 name='Firefox Private Session'
+
+[custom-keybindings/custom10]
+binding='<Shift><Super>Return'
+command='nautilus'
+name='Nautilus Alternative 1'
 
 [custom-keybindings/custom11]
 binding='<Shift><Super>g'
@@ -38,6 +43,11 @@ binding='<Super>k'
 command='gnome-control-center keyboard'
 name='Settings Keyboard'
 
+[custom-keybindings/custom16]
+binding='<Super>e'
+command='nautilus'
+name='Nautilus Alternative 2'
+
 [custom-keybindings/custom2]
 binding='<Control><Shift>Escape'
 command='flatpak run io.missioncenter.MissionCenter'
@@ -49,7 +59,7 @@ command='flatpak run com.jeffser.Alpaca'
 name='Launch Alpaca'
 
 [custom-keybindings/custom4]
-binding='<Super>e'
+binding='<Shift><Super>f'
 command='nautilus'
 name='Nautilus'
 
@@ -74,6 +84,6 @@ command='flatpak run md.obsidian.Obsidian'
 name='Obsidian'
 
 [custom-keybindings/custom9]
-binding='<Shift><Super>f'
+binding='<Shift><Super>e'
 command='flatpak run com.fastmail.Fastmail'
 name='Fastmail'
