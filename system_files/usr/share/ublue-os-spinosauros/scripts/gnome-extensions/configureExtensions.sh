@@ -21,12 +21,10 @@ extensions=(
   "hotedge@jonathan.jdoda.ca"
   "just-perfection-desktop@just-perfection"
   "quick-settings-audio-panel@rayzeq.github.io"
-  "smile-extension@mijorus.it"
   "tailscale-gnome-qs@tailscale-qs.github.io"
   "Studi-Brightness-Control@matey-0"
   "disable-workspace-switch-animation@osmancevik"
   "tilingshell@ferrarodomenico.com"
-  "BudsLink-Companion@maniacx.github.com"
 )
 
 for ext in "${extensions[@]}"; do
