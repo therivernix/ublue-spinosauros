@@ -49,6 +49,17 @@ dnf5 config-manager addrepo --overwrite \
 # Install Tailscale
 dnf5 install -y tailscale
 
+# Install ChatGPT Desktop
+# Download and install ChatGPT Codex
+mkdir -p /usr/share/ublue-os-spinosauros/codex
+
+curl -fL --retry 3 \
+    -o /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm \
+    https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.x86_64.rpm
+
+dnf5 install -y \
+    /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm
+
 
 ### Extensions
 
