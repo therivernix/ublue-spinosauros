@@ -61,7 +61,7 @@ dnf5 install -y \
     /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm
 
 
-bash /ctx/google.sh
+bash /ctx/build_files/google.sh
 
 ### Extensions
 
