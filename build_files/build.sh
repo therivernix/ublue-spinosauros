@@ -60,15 +60,8 @@ curl -fL --retry 3 \
 dnf5 install -y \
     /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm
 
-# Install Google Chrome
-dnf5 install -y fedora-workstation-repositories
 
-# Enable Google Chrome repository
-dnf5 config-manager setopt google-chrome.enabled=1
-
-# Install Google Chrome Stable
-dnf5 install -y google-chrome-stable
-
+bash /ctx/google.sh
 
 ### Extensions
 
@@ -108,9 +101,6 @@ dnf5 config-manager disable \
     'copr:copr.fedorainfracloud.org:ublue-os:akmods' \
     fedora-multimedia \
     tailscale-stable
-    
-# Disable Google Chrome repository after installation
-dnf5 config-manager setopt google-chrome.enabled=0
 
 #### Example for enabling a System Unit File
 systemctl enable podman.socket
