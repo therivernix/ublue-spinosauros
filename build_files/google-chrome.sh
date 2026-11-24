@@ -2,7 +2,7 @@
 
 # Tell build process to exit if there are any errors.
 set -oue pipefail
-source /ctx/oci/tr-osforge/build/helpers/utils.sh
+#source /ctx/oci/tr-osforge/build/helpers/utils.sh
 ###############################################################################
 # IMPORTANT CONVENTIONS (from @ublue-os/bluefin):
 # - Always clean up temporary repository files after installation
