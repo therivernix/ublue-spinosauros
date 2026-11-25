@@ -59,8 +59,13 @@ curl -fL --retry 3 \
 dnf5 install -y \
     /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm
 
-
+# Install Google Chrome
 bash /ctx/google-chrome.sh
+
+# Install wayland-scroll-factor
+sudo dnf install dnf-plugins-core
+sudo dnf copr enable daniel-g-carrasco/wayland-scroll-factor
+sudo dnf install wayland-scroll-factor
 
 ### Extensions
 
@@ -100,6 +105,8 @@ dnf5 config-manager disable \
     'copr:copr.fedorainfracloud.org:ublue-os:akmods' \
     fedora-multimedia \
     tailscale-stable
+    
+dnf5 -y copr disable daniel-g-carrasco/wayland-scroll-factor
 
 #### Example for enabling a System Unit File
 systemctl enable podman.socket
