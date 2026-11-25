@@ -39,8 +39,7 @@ dnf5 install -y \
     sassc \
     xdg-terminal-exec \
     gum \
-    dnf5-plugins \
-    chromium
+    dnf5-plugins
 
 # Add the official Tailscale repository
 dnf5 config-manager addrepo --overwrite \
