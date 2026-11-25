@@ -63,9 +63,8 @@ dnf5 install -y \
 bash /ctx/google-chrome.sh
 
 # Install wayland-scroll-factor
-sudo dnf install dnf-plugins-core
-sudo dnf copr enable daniel-g-carrasco/wayland-scroll-factor
-sudo dnf install wayland-scroll-factor
+dnf5 -y copr enable daniel-g-carrasco/wayland-scroll-factor
+dnf5 install -y wayland-scroll-factor
 
 ### Extensions
 
@@ -106,6 +105,7 @@ dnf5 config-manager disable \
     fedora-multimedia \
     tailscale-stable
     
+# Disable the COPR repository
 dnf5 -y copr disable daniel-g-carrasco/wayland-scroll-factor
 
 #### Example for enabling a System Unit File
