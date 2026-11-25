@@ -2,118 +2,178 @@
 
 set -ouex pipefail
 
-#Removing bluefin keybindings so I can override them
+# ==============================================================================
+# 01. Variables
+# ==============================================================================
+
+SYSTEM_FILES="/ctx/system_files"
+EXTENSIONS_DIR="/usr/share/gnome-shell/extensions"
+CODEX_DIR="/usr/share/ublue-os-spinosauros/codex"
+
+CODEX_URL="https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.x86_64.rpm"
+
+TAILSCALE_REPO="https://pkgs.tailscale.com/stable/fedora/tailscale.repo"
+SCROLL_FACTOR_COPR="daniel-g-carrasco/wayland-scroll-factor"
+
+
+# ==============================================================================
+# 02. Package definitions
+# ==============================================================================
+
+# System packages and utilities
+SYSTEM_PACKAGES=(
+    firefox
+    firefox-langpacks
+    yelp
+    curl
+    jq
+    unzip
+    git
+    xdg-terminal-exec
+    gum
+    dnf5-plugins
+)
+
+# Build tools and dependencies
+BUILD_PACKAGES=(
+    make
+    gettext
+    meson
+    glib2-devel
+    sassc
+)
+
+# Packages to remove from the final image
+REMOVE_PACKAGES=(
+    gnome-software
+    gnome-extensions-app
+    htop
+    nvtop
+    sassc
+)
+
+
+# ==============================================================================
+# 03. System preparation
+# ==============================================================================
+
+# Remove Bluefin keybindings if necessary
 # rm -f /etc/dconf/db/distro.d/02-bluefin-keybindings
 
-# Removing built-in extensions
-rm -rf /usr/share/gnome-shell/extensions/*
+# Remove preinstalled GNOME extensions
+rm -rf "${EXTENSIONS_DIR:?}/"*
 
-# Copy the contents of system_files/ of the git repo to /
-cp -avf "/ctx/system_files"/. /
+# Copy custom system files into the image
+cp -avf "${SYSTEM_FILES}/." /
 
-### Install packages
 
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
-
-# Use a COPR Example:
-
-# Enable COPRs to packages from said COPR can be installed during build time
-#dnf5 -y copr enable ublue-os/packages
-
+# ==============================================================================
+# 04. Install system packages
+# ==============================================================================
 
 dnf5 install -y \
-    firefox \
-    firefox-langpacks \
-    yelp \
-    curl \
-    jq \
-    unzip \
-    git \
-    make \
-    gettext \
-    meson \
-    glib2-devel \
-    sassc \
-    xdg-terminal-exec \
-    gum \
-    dnf5-plugins
+    "${SYSTEM_PACKAGES[@]}" \
+    "${BUILD_PACKAGES[@]}"
 
-# Add the official Tailscale repository
+
+# ==============================================================================
+# 05. Configure third-party repositories
+# ==============================================================================
+
+# Tailscale
 dnf5 config-manager addrepo --overwrite \
-    --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+    --from-repofile="${TAILSCALE_REPO}"
 
-# Install Tailscale
-dnf5 install -y tailscale
+# Wayland Scroll Factor
+dnf5 -y copr enable "${SCROLL_FACTOR_COPR}"
 
-# Install ChatGPT Desktop
-# Download and install ChatGPT Codex
-mkdir -p /usr/share/ublue-os-spinosauros/codex
+
+# ==============================================================================
+# 06. Install third-party packages
+# ==============================================================================
+
+dnf5 install -y \
+    tailscale \
+    wayland-scroll-factor
+
+
+# ==============================================================================
+# 07. Install external applications
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# ChatGPT Desktop / Codex
+# ------------------------------------------------------------------------------
+
+mkdir -p "${CODEX_DIR}"
 
 curl -fL --retry 3 \
-    -o /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm \
-    https://persistent.oaistatic.com/codex-app-prod/linux/rpm/latest/chatgpt.x86_64.rpm
+    -o "${CODEX_DIR}/chatgpt.x86_64.rpm" \
+    "${CODEX_URL}"
 
 dnf5 install -y \
-    /usr/share/ublue-os-spinosauros/codex/chatgpt.x86_64.rpm
+    "${CODEX_DIR}/chatgpt.x86_64.rpm"
 
-# Install Google Chrome
+# Remove the downloaded RPM after installation
+rm -f "${CODEX_DIR}/chatgpt.x86_64.rpm"
+
+
+# ------------------------------------------------------------------------------
+# Google Chrome
+# ------------------------------------------------------------------------------
+
 bash /ctx/google-chrome.sh
 
-# Install wayland-scroll-factor
-dnf5 -y copr enable daniel-g-carrasco/wayland-scroll-factor
-dnf5 install -y wayland-scroll-factor
 
-### Extensions
+# ==============================================================================
+# 08. Configure GNOME
+# ==============================================================================
 
 # Compile GSettings schemas for GNOME extensions
-find /usr/share/gnome-shell/extensions -type d -name schemas \
+find "${EXTENSIONS_DIR}" \
+    -type d \
+    -name schemas \
     -exec glib-compile-schemas {} \;
 
-
-### Gnome Dconf
-
-# Reloading dconf to ingest settings and apply kb shortcuts
-# Compile dconf databases
+# Compile dconf databases and apply system defaults
 dconf update
 
 
-### Cleaning Up
+# ==============================================================================
+# 09. Configure system services
+# ==============================================================================
 
-#Removing packages that are no longer needed after the build has completed
-dnf5 remove -y --no-autoremove \
-    gnome-software \
-    gnome-extensions-app \
-    htop \
-    nvtop \
-    sassc
-    #make \
-    #gettext \
-    #meson \
-    #glib2-devel \
-    
-dnf5 clean all
+# Enable Podman socket
+systemctl enable podman.socket
 
-# Disable COPRs so they don't end up enabled on the final image:
-#dnf5 -y copr disable ublue-os/packages
+# Enable Tailscale daemon
+systemctl enable tailscaled.service
 
-# Disable third-party repositories in the final image
+
+# ==============================================================================
+# 10. Disable third-party repositories
+# ==============================================================================
+
+# Disable COPR repositories
+dnf5 -y copr disable "${SCROLL_FACTOR_COPR}"
+
+# Disable other third-party repositories
 dnf5 config-manager disable \
     'copr:copr.fedorainfracloud.org:ublue-os:akmods' \
     fedora-multimedia \
     tailscale-stable
-    
-# Disable the COPR repository
-dnf5 -y copr disable daniel-g-carrasco/wayland-scroll-factor
-
-#### Example for enabling a System Unit File
-systemctl enable podman.socket
-
-# Enable the daemon for boot
-systemctl enable tailscaled.service
 
 
+# ==============================================================================
+# 11. Clean up final image
+# ==============================================================================
 
+# Remove unwanted packages without removing dependencies
+dnf5 remove -y --no-autoremove \
+    "${REMOVE_PACKAGES[@]}"
+
+# Clean package manager caches
+dnf5 clean all
+
+echo "Spinosauros image configuration completed successfully."
 
