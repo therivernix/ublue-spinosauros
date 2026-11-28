@@ -149,6 +149,9 @@ systemctl enable podman.socket
 # Enable Tailscale daemon
 systemctl enable tailscaled.service
 
+# Enable silverblue setup
+systemctl enable silverblue-setup-install.service
+
 
 # ==============================================================================
 # 10. Disable third-party repositories
